@@ -11,6 +11,8 @@ import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 
+import { partialBlobRouter } from "./api/partialBlob/partialBlobRouter";
+
 const logger = pino({ name: "server start" });
 const app: Express = express();
 
@@ -22,12 +24,15 @@ app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());
 app.use(rateLimiter);
 
+app.use(express.json());
+
 // Request logging
 app.use(requestLogger());
 
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
+app.use("/blobs", partialBlobRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
