@@ -14,6 +14,9 @@ model User {
   address      String        @id
   deposits     Int           @default(0)
   partialBlobs PartialBlob[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PartialBlob {
@@ -27,6 +30,9 @@ model PartialBlob {
   fusedBlobId       Int? // Might be null if not yet included
   fusedBlobPosition Int? // "" 
   cost              Int? // ""
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FusedBlob {
@@ -34,4 +40,7 @@ model FusedBlob {
   txHash       String? // Might be null until sent to network
   totalCost    Int?
   partialBlobs PartialBlob[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
