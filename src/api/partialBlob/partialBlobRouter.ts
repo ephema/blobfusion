@@ -5,7 +5,10 @@ import { StatusCodes } from "http-status-codes";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
 
-import { PostPartialBlobSchema } from "./partialBlobModel";
+import {
+  GetPartialBlobSchema,
+  PostPartialBlobSchema,
+} from "./partialBlobModel";
 import { partialBlobRepository } from "./partialBlobRepository";
 
 // export const partialBlobRegistry = new OpenAPIRegistry();
@@ -36,11 +39,32 @@ export const partialBlobRouter: Router = (() => {
     validateRequest(PostPartialBlobSchema),
     async (req: Request, res: Response) => {
       const { body } = PostPartialBlobSchema.parse(req);
-      const createdBlob = await partialBlobRepository.createAsync(body);
+      const createdPartialBlob = await partialBlobRepository.createAsync(body);
 
       res.status(StatusCodes.OK).json({
         success: true,
-        data: createdBlob,
+        data: createdPartialBlob,
+      });
+    },
+  );
+
+  router.get(
+    "/:id",
+    validateRequest(GetPartialBlobSchema),
+    async (req: Request, res: Response) => {
+      const id = parseInt(req.params.id as string, 10);
+      const partialBlob = await partialBlobRepository.findByIdAsync(id);
+
+      if (!partialBlob) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          data: null,
+        });
+      }
+
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        data: partialBlob,
       });
     },
   );
