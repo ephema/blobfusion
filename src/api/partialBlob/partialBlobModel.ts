@@ -5,23 +5,26 @@ import { commonValidations } from "@/common/utils/commonValidation";
 
 extendZodWithOpenApi(z);
 
+// TODO: verify that signature is valid signature of data
+// and that fromAddress is the address that signed the data
 export type PartialBlobSubmission = z.infer<typeof PartialBlobSubmissionSchema>;
 export const PartialBlobSubmissionSchema = z.object({
   bid: z.number(),
-  signature: commonValidations.hex,
+  signature: commonValidations.hex.length(132),
   data: z
     .string()
     .transform((val) => {
       return Buffer.from(val.replace("0x", ""), "hex");
     })
     .or(commonValidations.hex),
-  fromAddress: commonValidations.hex,
+  fromAddress: commonValidations.address,
 });
 
 export type PartialBlob = z.infer<typeof PartialBlobSchema>;
 export const PartialBlobSchema = PartialBlobSubmissionSchema.extend({
   id: z.number(),
   createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date(),
   fusedBlobId: z.number().nullable(),
   fusedBlobPosition: z.number().nullable(),
   cost: z.number().nullable(),
