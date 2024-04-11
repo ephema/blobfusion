@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  address      String        @id
+  deposits     Int           @default(0)
+  partialBlobs PartialBlob[]
+}
+
+model PartialBlob {
+  id                Int        @id @default(autoincrement())
+  bid               Int
+  signature         String
+  data              Bytes
+  fromAddress       String
+  owner             User       @relation(fields: [fromAddress], references: [address])
+  fusedBlob         FusedBlob? @relation(fields: [fusedBlobId], references: [id])
+  fusedBlobId       Int? // Might be null if not yet included
+  fusedBlobPosition Int? // "" 
+  cost              Int? // ""
+}
+
+model FusedBlob {
+  id           Int           @id @default(autoincrement())
+  txHash       String? // Might be null until sent to network
+  totalCost    Int?
+  partialBlobs PartialBlob[]
+}

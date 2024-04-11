@@ -6,7 +6,7 @@ services:
     restart: always
     container_name: postgres-container
     ports:
-      - "5433:${POSTGRES_PORT}"
+      - "${POSTGRES_PORT}:5432"
     env_file:
       - .env
     environment:
