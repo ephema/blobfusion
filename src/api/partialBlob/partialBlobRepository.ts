@@ -38,6 +38,7 @@ export const partialBlobRepository = {
     };
 
     partialBlobs.push(partialBlob);
+
     return partialBlob;
   },
   findAllAsync: async (): Promise<PartialBlob[]> => {

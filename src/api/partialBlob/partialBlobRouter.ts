@@ -1,14 +1,12 @@
 // import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express, { Request, Response, Router } from "express";
+import { StatusCodes } from "http-status-codes";
 
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
-import {
-  handleServiceResponse,
-  validateRequest,
-} from "@/common/utils/httpHandlers";
+import { validateRequest } from "@/common/utils/httpHandlers";
 
 import { PostPartialBlobSchema } from "./partialBlobModel";
-import { partialBlobService } from "./partialBlobService";
+import { partialBlobRepository } from "./partialBlobRepository";
 
 // export const partialBlobRegistry = new OpenAPIRegistry();
 
@@ -25,8 +23,12 @@ export const partialBlobRouter: Router = (() => {
   // });
 
   router.get("/", async (_req: Request, res: Response) => {
-    const serviceResponse = await partialBlobService.findAll();
-    handleServiceResponse(serviceResponse, res);
+    const partialBlobs = await partialBlobRepository.findAllAsync();
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: partialBlobs,
+    });
   });
 
   router.post(
@@ -34,8 +36,12 @@ export const partialBlobRouter: Router = (() => {
     validateRequest(PostPartialBlobSchema),
     async (req: Request, res: Response) => {
       const { body } = PostPartialBlobSchema.parse(req);
-      const serviceResponse = await partialBlobService.create(body);
-      handleServiceResponse(serviceResponse, res);
+      const createdBlob = await partialBlobRepository.createAsync(body);
+
+      res.status(StatusCodes.OK).json({
+        success: true,
+        data: createdBlob,
+      });
     },
   );
 
