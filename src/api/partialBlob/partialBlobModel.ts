@@ -8,9 +8,14 @@ extendZodWithOpenApi(z);
 export type PartialBlobSubmission = z.infer<typeof PartialBlobSubmissionSchema>;
 export const PartialBlobSubmissionSchema = z.object({
   bid: z.number(),
-  signature: z.string(),
-  data: z.string().transform((val) => Buffer.from(val)),
-  fromAddress: z.string(),
+  signature: commonValidations.hex,
+  data: z
+    .string()
+    .transform((val) => {
+      return Buffer.from(val.replace("0x", ""), "hex");
+    })
+    .or(commonValidations.hex),
+  fromAddress: commonValidations.hex,
 });
 
 export type PartialBlob = z.infer<typeof PartialBlobSchema>;

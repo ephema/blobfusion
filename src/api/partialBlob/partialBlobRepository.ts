@@ -1,13 +1,16 @@
 import { prisma } from "@/api/prisma/client";
 
+import { convertHexToBuffer } from "./convertDataFieldBufferToHex";
 import { PartialBlob, PartialBlobSubmission } from "./partialBlobModel";
 
 export const partialBlobRepository = {
   createAsync: async (input: PartialBlobSubmission): Promise<PartialBlob> => {
-    const { fromAddress, ...partialBlobData } = input;
+    const { fromAddress, data, ...partialBlobData } = input;
+
     return prisma.partialBlob.create({
       data: {
         ...partialBlobData,
+        data: convertHexToBuffer(data),
         owner: {
           connectOrCreate: {
             where: { address: fromAddress },

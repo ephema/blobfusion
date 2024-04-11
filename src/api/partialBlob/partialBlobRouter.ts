@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
 
+import { convertDataFieldBufferToHex } from "./convertDataFieldBufferToHex";
 import {
   GetPartialBlobSchema,
   PostPartialBlobSchema,
@@ -30,7 +31,9 @@ export const partialBlobRouter: Router = (() => {
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      data: partialBlobs,
+      data: partialBlobs.map((partialBlob) =>
+        convertDataFieldBufferToHex(partialBlob),
+      ),
     });
   });
 
@@ -43,7 +46,7 @@ export const partialBlobRouter: Router = (() => {
 
       res.status(StatusCodes.OK).json({
         success: true,
-        data: createdPartialBlob,
+        data: convertDataFieldBufferToHex(createdPartialBlob),
       });
     },
   );
@@ -64,7 +67,7 @@ export const partialBlobRouter: Router = (() => {
 
       return res.status(StatusCodes.OK).json({
         success: true,
-        data: partialBlob,
+        data: convertDataFieldBufferToHex(partialBlob),
       });
     },
   );
