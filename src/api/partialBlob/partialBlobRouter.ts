@@ -6,7 +6,6 @@ import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
 
-import { convertDataFieldBufferToHex } from "./convertDataFieldBufferToHex";
 import {
   GetPartialBlobSchema,
   PostPartialBlobSchema,
@@ -32,20 +31,13 @@ export const partialBlobRouter: Router = (() => {
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      data: partialBlobs.map((partialBlob) =>
-        convertDataFieldBufferToHex(partialBlob),
-      ),
+      data: partialBlobs,
     });
   });
 
   router.get("/fused", async (_req: Request, res: Response) => {
     const partialBlobs = await partialBlobRepository.findAllAsync();
-
-    const partialBlobsWithDataAsHex = partialBlobs.map(
-      convertDataFieldBufferToHex,
-    );
-
-    const fusedBlobs = fusePartialBlobs(partialBlobsWithDataAsHex);
+    const fusedBlobs = fusePartialBlobs(partialBlobs);
     const unfusedBlobs = unfuseFusedBlob(fusedBlobs);
 
     return res.status(StatusCodes.OK).json({
@@ -66,7 +58,7 @@ export const partialBlobRouter: Router = (() => {
 
       res.status(StatusCodes.OK).json({
         success: true,
-        data: convertDataFieldBufferToHex(createdPartialBlob),
+        data: createdPartialBlob,
       });
     },
   );
@@ -87,7 +79,7 @@ export const partialBlobRouter: Router = (() => {
 
       return res.status(StatusCodes.OK).json({
         success: true,
-        data: convertDataFieldBufferToHex(partialBlob),
+        data: partialBlob,
       });
     },
   );

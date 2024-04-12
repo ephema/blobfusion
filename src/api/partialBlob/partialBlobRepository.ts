@@ -1,13 +1,16 @@
 import { prisma } from "@/api/prisma/client";
 
-import { convertHexToBuffer } from "./convertDataFieldBufferToHex";
+import {
+  convertHexToBuffer,
+  convertPartialBlobInDBToPartialBlob,
+} from "./convertPartialBlobInDBToPartialBlob";
 import { PartialBlob, PartialBlobSubmission } from "./partialBlobModel";
 
 export const partialBlobRepository = {
   createAsync: async (input: PartialBlobSubmission): Promise<PartialBlob> => {
     const { fromAddress, data, ...partialBlobData } = input;
 
-    return prisma.partialBlob.create({
+    const partialBlobInDB = await prisma.partialBlob.create({
       data: {
         ...partialBlobData,
         data: convertHexToBuffer(data),
@@ -19,12 +22,23 @@ export const partialBlobRepository = {
         },
       },
     });
+
+    return convertPartialBlobInDBToPartialBlob(partialBlobInDB);
   },
   findAllAsync: async (): Promise<PartialBlob[]> => {
-    return prisma.partialBlob.findMany();
+    const partialBlobsInDB = await prisma.partialBlob.findMany();
+    return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
   },
 
   findByIdAsync: async (id: number): Promise<PartialBlob | null> => {
-    return prisma.partialBlob.findUnique({ where: { id } });
+    const partialBlobInDB = await prisma.partialBlob.findUnique({
+      where: { id },
+    });
+
+    if (!partialBlobInDB) {
+      return null;
+    }
+
+    return convertPartialBlobInDBToPartialBlob(partialBlobInDB);
   },
 };

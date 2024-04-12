@@ -26,6 +26,13 @@ export const PartialBlobSchema = PartialBlobSubmissionSchema.extend({
   cost: z.number().nullable(),
 });
 
+export type PartialBlobInDB = z.infer<typeof PartialBlobDatabaseSchema>;
+export const PartialBlobDatabaseSchema = PartialBlobSchema.extend({
+  data: z.instanceof(Buffer),
+  signature: z.string(),
+  fromAddress: z.string(),
+});
+
 export const PostPartialBlobSchema = z.object({
   body: PartialBlobSubmissionSchema,
 });
