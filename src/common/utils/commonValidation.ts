@@ -1,5 +1,7 @@
-import { isAddress } from "viem";
+import { isAddress, isHex } from "viem";
 import { z } from "zod";
+
+import { HEX_MULTIPLIER, SIGNATURE_LENGTH_IN_BYTES } from "../constants";
 
 export const commonValidations = {
   id: z
@@ -7,10 +9,13 @@ export const commonValidations = {
     .refine((data) => !isNaN(Number(data)), "ID must be a numeric value")
     .transform(Number)
     .refine((num) => num > 0, "ID must be a positive number"),
-  hex: z
+  hex: z.string().refine(isHex, "Invalid hex"),
+  signature: z
     .string()
-    .startsWith("0x")
-    .toLowerCase()
-    .regex(/^0x[0-9a-f]+$/),
-  address: z.string().refine((val) => isAddress(val), "Invalid address"),
+    .length(
+      SIGNATURE_LENGTH_IN_BYTES * HEX_MULTIPLIER + 2, // +2 for 0x prefix
+      "Invalid signature length",
+    )
+    .refine(isHex, "Invalid hex"),
+  address: z.string().refine(isAddress, "Invalid address"),
 };

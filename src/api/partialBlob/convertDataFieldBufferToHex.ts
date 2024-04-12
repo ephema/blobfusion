@@ -1,7 +1,7 @@
 import { PartialBlob } from "./partialBlobModel";
 
 export const convertDataFieldBufferToHex = (
-  partialBlob: PartialBlob,
+  partialBlob: Omit<PartialBlob, "data"> & { data: Buffer },
 ): PartialBlob => {
   return {
     ...partialBlob,

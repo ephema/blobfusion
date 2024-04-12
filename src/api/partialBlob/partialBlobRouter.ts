@@ -2,6 +2,7 @@
 import express, { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 
+import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
 
@@ -34,6 +35,25 @@ export const partialBlobRouter: Router = (() => {
       data: partialBlobs.map((partialBlob) =>
         convertDataFieldBufferToHex(partialBlob),
       ),
+    });
+  });
+
+  router.get("/fused", async (_req: Request, res: Response) => {
+    const partialBlobs = await partialBlobRepository.findAllAsync();
+
+    const partialBlobsWithDataAsHex = partialBlobs.map(
+      convertDataFieldBufferToHex,
+    );
+
+    const fusedBlobs = fusePartialBlobs(partialBlobsWithDataAsHex);
+    const unfusedBlobs = unfuseFusedBlob(fusedBlobs);
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: {
+        fusedBlobs,
+        unfusedBlobs,
+      },
     });
   });
 
