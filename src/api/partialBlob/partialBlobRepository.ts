@@ -1,3 +1,5 @@
+import { type Hex } from "viem";
+
 import { prisma } from "@/api/prisma/client";
 
 import {
@@ -28,6 +30,39 @@ export const partialBlobRepository = {
   findAllAsync: async (): Promise<PartialBlob[]> => {
     const partialBlobsInDB = await prisma.partialBlob.findMany();
     return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
+  },
+
+  findAllUnfusedAsync: async (): Promise<PartialBlob[]> => {
+    const partialBlobsInDB = await prisma.partialBlob.findMany({
+      where: { fusedBlobId: null },
+    });
+    return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
+  },
+
+  markAsFused: async (blobIds: PartialBlob["id"][]): Promise<number> => {
+    const { id: fusedBlobId } = await prisma.fusedBlob.create({
+      data: {},
+      select: { id: true },
+    });
+
+    // TODO: also update fusedBlobPosition or remove it
+    await prisma.partialBlob.updateMany({
+      where: { id: { in: blobIds } },
+      data: { fusedBlobId },
+    });
+
+    return fusedBlobId;
+  },
+
+  updateTxHashForFusedBlob: async (
+    fusedBlobId: number,
+    txHash: Hex,
+  ): Promise<void> => {
+    // TODO: Also update totalCost
+    await prisma.fusedBlob.update({
+      where: { id: fusedBlobId },
+      data: { txHash },
+    });
   },
 
   findByIdAsync: async (id: number): Promise<PartialBlob | null> => {
