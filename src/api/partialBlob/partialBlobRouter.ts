@@ -3,9 +3,9 @@ import express, { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
-import { sendBlobTransaction } from "@/common/ethereum/sendBlobTransaction";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
+import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 
 import {
   GetPartialBlobSchema,
@@ -51,17 +51,12 @@ export const partialBlobRouter: Router = (() => {
   });
 
   router.post("/fused", async (_req: Request, res: Response) => {
+    const txHash = await fuseAndSendBlobs();
     const partialBlobs = await partialBlobRepository.findAllAsync();
-    const fusedBlobs = fusePartialBlobs(partialBlobs);
-
-    const txHash = await sendBlobTransaction({ data: fusedBlobs });
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      data: {
-        txHash,
-        fusedBlobs,
-      },
+      data: { txHash, partialBlobs },
     });
   });
 

@@ -39,7 +39,9 @@ export const partialBlobRepository = {
     return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
   },
 
-  markAsFused: async (blobIds: PartialBlob["id"][]): Promise<number> => {
+  createNewFusedBlobWithPartialBlobs: async (
+    blobIds: PartialBlob["id"][],
+  ): Promise<number> => {
     const { id: fusedBlobId } = await prisma.fusedBlob.create({
       data: {},
       select: { id: true },

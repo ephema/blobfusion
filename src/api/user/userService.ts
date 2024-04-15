@@ -2,11 +2,11 @@ import { StatusCodes } from "http-status-codes";
 
 import { User } from "@/api/user/userModel";
 import { userRepository } from "@/api/user/userRepository";
+import { logger } from "@/common/logger";
 import {
   ResponseStatus,
   ServiceResponse,
 } from "@/common/models/serviceResponse";
-import { logger } from "@/server";
 
 export const userService = {
   // Retrieves all users from the database

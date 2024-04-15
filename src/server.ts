@@ -1,11 +1,11 @@
 import cors from "cors";
 import express, { Express } from "express";
 import helmet from "helmet";
-import { pino } from "pino";
 
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
 import { userRouter } from "@/api/user/userRouter";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
+import { logger } from "@/common/logger";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
@@ -13,7 +13,6 @@ import { env } from "@/common/utils/envConfig";
 
 import { partialBlobRouter } from "./api/partialBlob/partialBlobRouter";
 
-const logger = pino({ name: "server start" });
 const app: Express = express();
 
 // Set the application to trust the reverse proxy

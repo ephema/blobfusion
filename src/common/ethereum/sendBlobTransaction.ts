@@ -6,6 +6,8 @@ import { viemWalletClient } from "./viemWalletClient";
 export const sendBlobTransaction = async ({ data }: { data: Hex }) => {
   const kzg = await getKZG();
 
+  // TODO: Don't use toBlobs (https://github.com/wevm/viem/blob/main/src/utils/blob/toBlobs.ts)
+  // to make raw blobs without viem delimiters
   return viemWalletClient.sendTransaction({
     blobs: toBlobs({ data }),
     kzg,
