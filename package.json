@@ -24,6 +24,7 @@
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
     "@ladjs/graceful": "^3.2.2",
+    "@openzeppelin/contracts": "^5.0.2",
     "@prisma/client": "^5.12.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

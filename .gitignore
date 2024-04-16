@@ -29,6 +29,7 @@ dist-ssr
 # Hardhat files
 /src/ethereum/cache
 /src/ethereum/artifacts
+/src/ethereum/ignition/deployments
 
 # TypeChain files
 /typechain

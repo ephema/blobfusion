@@ -1,14 +1,14 @@
 import dotenv from "dotenv";
 import { cleanEnv, host, makeValidator, num, port, str } from "envalid";
-import { Hex } from "viem";
+import { isHex } from "viem";
 
 import { SUPPORTED_CHAINS } from "@/ethereum/supportedChains";
 
 dotenv.config();
 
-const privateKeyValidator = makeValidator<Hex>((x) => {
-  if (/^0x.+$/.test(x)) {
-    return x as Hex;
+const hexStringValidator = makeValidator((x) => {
+  if (isHex(x)) {
+    return x;
   }
 
   throw new Error("Expected the private key to start with 0x");
@@ -25,5 +25,6 @@ export const env = cleanEnv(process.env, {
     choices: SUPPORTED_CHAINS.map((chain) => chain.id),
   }),
   BLOB_SENDER_RPC_URL: str({ default: "" }),
-  BLOB_SENDER_PRIVATE_KEY: privateKeyValidator(),
+  BLOB_SENDER_PRIVATE_KEY: hexStringValidator(),
+  DEPOSIT_CONTRACT_OWNER_PUBLIC_KEY: hexStringValidator(),
 });
