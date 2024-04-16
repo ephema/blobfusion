@@ -1,3 +1,4 @@
+import { fusedBlobRepository } from "@/api/fusedBlob/fusedBlobRepository";
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
 import { partialBlobRepository } from "@/api/partialBlob/partialBlobRepository";
 import { fusePartialBlobs } from "@/blob-fuser";
@@ -23,18 +24,17 @@ export const fuseAndSendBlobs = async () => {
 
   const fusedBlob = fusePartialBlobs(blobsToFuse);
 
-  // TODO: Put this function in a new fusedBlobRepository
   // TODO: Also update fusedBlobPosition
   // TODO: Also update the name of the function to
-  const fusedBlobId =
-    await partialBlobRepository.createNewFusedBlobWithPartialBlobs(
-      blobsToFuse.map((blob) => blob.id),
-    );
+  const fusedBlobId = await fusedBlobRepository.createAsync({
+    blobIds: blobsToFuse.map((blob) => blob.id),
+  });
 
   schedulerLogger.info("Created new fused blob with id %d", fusedBlobId);
 
   const txHash = await sendBlobTransaction({ data: fusedBlob });
-  await partialBlobRepository.updateTxHashForFusedBlob(fusedBlobId, txHash);
+  // TODO: deduct balances
+  await fusedBlobRepository.updateTxHash({ id: fusedBlobId, txHash });
 
   schedulerLogger.info("Fused blob tx submitted with txHash %d", txHash);
 
