@@ -2,7 +2,7 @@ import { fusedBlobRepository } from "@/api/fusedBlob/fusedBlobRepository";
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
 import { partialBlobRepository } from "@/api/partialBlob/partialBlobRepository";
 import { fusePartialBlobs } from "@/blob-fuser";
-import { sendBlobTransaction } from "@/common/ethereum/sendBlobTransaction";
+import { sendBlobTransaction } from "@/ethereum/sendBlobTransaction";
 
 import { schedulerLogger } from "./logger";
 

@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { cleanEnv, host, makeValidator, num, port, str } from "envalid";
 import { Hex } from "viem";
 
-import { SUPPORTED_CHAINS } from "../ethereum/supportedChains";
+import { SUPPORTED_CHAINS } from "@/ethereum/supportedChains";
 
 dotenv.config();
 
