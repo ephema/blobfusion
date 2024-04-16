@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "CommonJS",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
@@ -17,7 +17,6 @@
     "ignoreDeprecations": "5.0",
     "types": ["vitest/globals"]
   },
-  "extends": [],
   "exclude": ["node_modules"],
   "include": ["src/**/*.ts"]
 }
