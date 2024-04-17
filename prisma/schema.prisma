@@ -13,7 +13,7 @@ datasource db {
 model User {
   address      String        @id
   partialBlobs PartialBlob[]
-  Deposit      Deposit[]
+  deposits     Deposit[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -30,7 +30,7 @@ model Deposit {
 
 model PartialBlob {
   id                Int        @id @default(autoincrement())
-  bid               Int
+  bid               BigInt
   signature         String
   data              Bytes
   fromAddress       String
@@ -38,7 +38,7 @@ model PartialBlob {
   fusedBlob         FusedBlob? @relation(fields: [fusedBlobId], references: [id])
   fusedBlobId       Int? // Might be null if not yet included
   fusedBlobPosition Int? // "" 
-  cost              Int? // ""
+  cost              BigInt? // ""
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

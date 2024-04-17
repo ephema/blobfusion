@@ -1,30 +1,40 @@
-import { User } from "@/api/user/userModel";
+import { type Hex } from "viem";
 
-export const users: User[] = [
-  {
-    id: 1,
-    name: "Alice",
-    email: "alice@example.com",
-    age: 42,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 2,
-    name: "Bob",
-    email: "bob@example.com",
-    age: 21,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
+import { prisma } from "@/api/prisma/client";
+import { logger } from "@/common/logger";
 
 export const userRepository = {
-  findAllAsync: async (): Promise<User[]> => {
-    return users;
-  },
+  getBalance: async ({ address }: { address: Hex }): Promise<bigint> => {
+    const depositResult = await prisma.deposit.groupBy({
+      by: ["fromAddress"],
+      where: { fromAddress: address },
+      _sum: {
+        amount: true,
+      },
+    });
 
-  findByIdAsync: async (id: number): Promise<User | null> => {
-    return users.find((user) => user.id === id) || null;
+    const userDeposits = depositResult?.[0]?._sum.amount ?? 0n;
+
+    // TODO: There could be a race condition hiding here
+    // if a user submitted a blob (i.e. has a fusedBlobId) but
+    // the cost has not been calculated yet (which should happen
+    // after the tx was successfully sent)
+    const partialBlobCostResult = await prisma.partialBlob.groupBy({
+      by: ["fromAddress"],
+      where: { fromAddress: address, fusedBlobId: { not: null } },
+      _sum: {
+        cost: true,
+      },
+    });
+
+    const userCosts = partialBlobCostResult?.[0]?._sum.cost ?? 0n;
+
+    const balance = userDeposits - userCosts;
+
+    if (balance < 0n) {
+      logger.warn("User %s has negative balance of %d", address, balance);
+    }
+
+    return balance;
   },
 };

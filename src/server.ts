@@ -3,7 +3,6 @@ import express, { Express } from "express";
 import helmet from "helmet";
 
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
-import { userRouter } from "@/api/user/userRouter";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
@@ -29,7 +28,6 @@ app.use(requestLogger());
 
 // Routes
 app.use("/health-check", healthCheckRouter);
-app.use("/users", userRouter);
 app.use("/blobs", partialBlobRouter);
 
 // Swagger UI
