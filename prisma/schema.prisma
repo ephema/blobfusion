@@ -12,11 +12,20 @@ datasource db {
 
 model User {
   address      String        @id
-  deposits     Int           @default(0)
   partialBlobs PartialBlob[]
+  Deposit      Deposit[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Deposit {
+  id          Int      @id @default(autoincrement())
+  amount      BigInt
+  fromAddress String
+  owner       User     @relation(fields: [fromAddress], references: [address])
+  txHash      String   @unique
+  createdAt   DateTime @default(now())
 }
 
 model PartialBlob {

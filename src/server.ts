@@ -5,7 +5,6 @@ import helmet from "helmet";
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
 import { userRouter } from "@/api/user/userRouter";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import { logger } from "@/common/logger";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
@@ -39,4 +38,4 @@ app.use(openAPIRouter);
 // Error handlers
 app.use(errorHandler());
 
-export { app, logger };
+export { app };

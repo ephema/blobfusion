@@ -1,8 +1,12 @@
+import "./ethereum/events/subscribeToDepositEvents";
+
 import Graceful from "@ladjs/graceful";
 
+import { logger } from "@/common/logger";
 import { env } from "@/common/utils/envConfig";
-import { app, logger } from "@/server";
+import { app } from "@/server";
 
+import { unsubscribeFromDepositEvents } from "./ethereum/events";
 import { scheduler } from "./scheduler";
 
 const server = app.listen(env.PORT, () => {
@@ -17,6 +21,10 @@ const graceful = new Graceful({
     () => {
       logger.info("Stopping scheduler");
       scheduler.stop();
+    },
+    () => {
+      logger.info("Stopping event listener for deposits");
+      unsubscribeFromDepositEvents();
     },
   ],
 });

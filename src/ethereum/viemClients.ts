@@ -1,4 +1,4 @@
-import { createWalletClient, http } from "viem";
+import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 
 import { env } from "@/common/utils/envConfig";
@@ -18,6 +18,11 @@ export const blobSubmitterWalletClient = createWalletClient({
 const depositContractRpcUrl = env.DEPOSIT_CONTRACT_RPC_URL;
 export const depositContractWalletClient = createWalletClient({
   account: privateKeyToAccount(env.DEPOSIT_CONTRACT_DEPLOY_PRIVATE_KEY),
+  chain: getDepositContractChainFromId(env.DEPOSIT_CONTRACT_CHAIN_ID),
+  transport: http(depositContractRpcUrl ? depositContractRpcUrl : undefined),
+});
+
+export const depositContractPublicClient = createPublicClient({
   chain: getDepositContractChainFromId(env.DEPOSIT_CONTRACT_CHAIN_ID),
   transport: http(depositContractRpcUrl ? depositContractRpcUrl : undefined),
 });

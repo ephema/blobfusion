@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Deposit" ALTER COLUMN "amount" SET DATA TYPE BIGINT;

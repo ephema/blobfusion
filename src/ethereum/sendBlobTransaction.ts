@@ -1,7 +1,7 @@
 import { type Hex, parseGwei, toBlobs } from "viem";
 
 import { getKZG } from "./kzg";
-import { blobSubmitterWalletClient } from "./viemWalletClient";
+import { blobSubmitterWalletClient } from "./viemClients";
 
 export const sendBlobTransaction = async ({ data }: { data: Hex }) => {
   const kzg = await getKZG();
