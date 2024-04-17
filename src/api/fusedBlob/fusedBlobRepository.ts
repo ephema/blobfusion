@@ -34,7 +34,7 @@ export const fusedBlobRepository = {
     await prisma.fusedBlob.update({
       where: { id },
       data: { txHash },
-      select: {},
+      select: { id: true },
     });
   },
 };

@@ -32,11 +32,11 @@ export const fuseAndSendBlobs = async () => {
 
   schedulerLogger.info("Created new fused blob with id %d", fusedBlobId);
 
+  // TODO: error handling if tx fails
   const txHash = await sendBlobTransaction({ data: fusedBlob });
   // TODO: deduct balances
   await fusedBlobRepository.updateTxHash({ id: fusedBlobId, txHash });
-
-  schedulerLogger.info("Fused blob tx submitted with txHash %d", txHash);
+  schedulerLogger.info("Fused blob tx submitted with txHash %s", txHash);
 
   return txHash;
 };

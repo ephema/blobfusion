@@ -3,16 +3,21 @@ import { privateKeyToAccount } from "viem/accounts";
 
 import { env } from "@/common/utils/envConfig";
 
-import { getChainFromId } from "./supportedChains";
+import {
+  getBlobSubmissionChainFromId,
+  getDepositContractChainFromId,
+} from "./supportedChains";
 
-const chainId = env.BLOB_SENDER_CHAIN_ID;
-const privateKey = env.BLOB_SENDER_PRIVATE_KEY;
-const rpcUrl = env.BLOB_SENDER_RPC_URL;
+const blobSubmitterRpcUrl = env.BLOB_SUBMITTER_RPC_URL;
+export const blobSubmitterWalletClient = createWalletClient({
+  account: privateKeyToAccount(env.BLOB_SUBMITTER_PRIVATE_KEY),
+  chain: getBlobSubmissionChainFromId(env.BLOB_SUBMITTER_CHAIN_ID),
+  transport: http(blobSubmitterRpcUrl ? blobSubmitterRpcUrl : undefined),
+});
 
-const account = privateKeyToAccount(privateKey);
-
-export const viemWalletClient = createWalletClient({
-  account,
-  chain: getChainFromId(chainId),
-  transport: http(rpcUrl ? rpcUrl : undefined),
+const depositContractRpcUrl = env.DEPOSIT_CONTRACT_RPC_URL;
+export const depositContractWalletClient = createWalletClient({
+  account: privateKeyToAccount(env.DEPOSIT_CONTRACT_DEPLOY_PRIVATE_KEY),
+  chain: getDepositContractChainFromId(env.DEPOSIT_CONTRACT_CHAIN_ID),
+  transport: http(depositContractRpcUrl ? depositContractRpcUrl : undefined),
 });

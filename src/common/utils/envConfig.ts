@@ -2,7 +2,10 @@ import dotenv from "dotenv";
 import { cleanEnv, host, makeValidator, num, port, str } from "envalid";
 import { isHex } from "viem";
 
-import { SUPPORTED_CHAINS } from "@/ethereum/supportedChains";
+import {
+  SUPPORTED_BLOB_SUBMISSION_CHAINS,
+  SUPPORTED_DEPOSIT_CONTRACT_CHAINS,
+} from "@/ethereum/supportedChains";
 
 dotenv.config();
 
@@ -21,10 +24,18 @@ export const env = cleanEnv(process.env, {
   CORS_ORIGIN: str(),
   COMMON_RATE_LIMIT_MAX_REQUESTS: num(),
   COMMON_RATE_LIMIT_WINDOW_MS: num(),
-  BLOB_SENDER_CHAIN_ID: num({
-    choices: SUPPORTED_CHAINS.map((chain) => chain.id),
+
+  BLOB_SUBMITTER_PRIVATE_KEY: hexStringValidator(),
+  BLOB_SUBMITTER_CHAIN_ID: num({
+    choices: SUPPORTED_BLOB_SUBMISSION_CHAINS.map((chain) => chain.id),
   }),
-  BLOB_SENDER_RPC_URL: str({ default: "" }),
-  BLOB_SENDER_PRIVATE_KEY: hexStringValidator(),
+  BLOB_SUBMITTER_RPC_URL: str({ default: "" }),
+
+  DEPOSIT_CONTRACT_DEPLOY_PRIVATE_KEY: hexStringValidator(),
   DEPOSIT_CONTRACT_OWNER_PUBLIC_KEY: hexStringValidator(),
+  DEPOSIT_CONTRACT_CHAIN_ID: num({
+    choices: SUPPORTED_DEPOSIT_CONTRACT_CHAINS.map((chain) => chain.id),
+  }),
+  DEPOSIT_CONTRACT_RPC_URL: str({ default: "" }),
+  DEPOSIT_CONTRACT_ADDRESS: hexStringValidator(),
 });

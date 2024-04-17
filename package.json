@@ -19,7 +19,8 @@
     "prepare": "husky",
     "release": "release-it",
     "test:hardhat": "npm run build:hardhat && hardhat test",
-    "build:hardhat": "hardhat compile"
+    "build:hardhat": "hardhat compile",
+    "deploy-hardhat": "npx hardhat ignition deploy ./src/ethereum/ignition/modules/BlobFusion.ts --network localhost"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
