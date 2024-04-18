@@ -8,7 +8,7 @@ import { depositContractPublicClient } from "../viemClients";
 export type DepositEvent = {
   txHash: Hex;
   depositor: Hex;
-  valueInGwei: bigint;
+  amount: bigint; // in wei
 };
 
 export const subscribeToDepositEvents = ({
@@ -40,7 +40,7 @@ export const subscribeToDepositEvents = ({
           args.amount,
         );
 
-        onDeposit({ txHash: transactionHash, depositor, valueInGwei: amount });
+        onDeposit({ txHash: transactionHash, depositor, amount });
       });
     },
   });
