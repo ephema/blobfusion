@@ -14,6 +14,10 @@ export const blobSubmitterWalletClient = createWalletClient({
   chain: getBlobSubmissionChainFromId(env.BLOB_SUBMITTER_CHAIN_ID),
   transport: http(blobSubmitterRpcUrl ? blobSubmitterRpcUrl : undefined),
 });
+export const blobSubmitterPublicClient = createPublicClient({
+  chain: getBlobSubmissionChainFromId(env.BLOB_SUBMITTER_CHAIN_ID),
+  transport: http(blobSubmitterRpcUrl ? blobSubmitterRpcUrl : undefined),
+});
 
 const depositContractRpcUrl = env.DEPOSIT_CONTRACT_RPC_URL;
 export const depositContractWalletClient = createWalletClient({

@@ -5,8 +5,10 @@ import { StatusCodes } from "http-status-codes";
 import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
+import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
 import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 
+import { userRepository } from "../user/userRepository";
 import {
   GetPartialBlobSchema,
   PostPartialBlobSchema,
@@ -65,10 +67,47 @@ export const partialBlobRouter: Router = (() => {
     validateRequest(PostPartialBlobSchema),
     async (req: Request, res: Response) => {
       const { body } = PostPartialBlobSchema.parse(req);
+      const { signature, data, fromAddress, bid } = body;
+
+      const signatureIsValid = await blobSubmitterPublicClient.verifyMessage({
+        address: fromAddress,
+        message: { raw: data },
+        signature,
+      });
+
+      if (!signatureIsValid) {
+        res.status(StatusCodes.FORBIDDEN).json({
+          success: false,
+          message: "Signature is invalid",
+          data: null,
+        });
+
+        return;
+      }
+
+      const userBalance = await userRepository.getBalance({
+        address: fromAddress,
+      });
+
+      if (userBalance < bid) {
+        res.status(StatusCodes.FORBIDDEN).json({
+          success: false,
+          message: "Insufficient balance",
+          data: null,
+        });
+
+        return;
+      }
+
       const createdPartialBlob = await partialBlobRepository.createAsync(body);
+
+      BigInt.prototype.toJSON = function () {
+        return this.toString();
+      };
 
       res.status(StatusCodes.OK).json({
         success: true,
+        message: "Blob created",
         data: createdPartialBlob,
       });
     },
