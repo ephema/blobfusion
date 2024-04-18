@@ -9,7 +9,7 @@ extendZodWithOpenApi(z);
 // and that fromAddress is the address that signed the data
 export type PartialBlobSubmission = z.infer<typeof PartialBlobSubmissionSchema>;
 export const PartialBlobSubmissionSchema = z.object({
-  bid: z.coerce.bigint(),
+  bidInGwei: z.coerce.bigint(),
   signature: commonValidations.signature,
   // TODO: data has to be smaller than MAX_BLOB_SIZE_IN_BYTES + SIGNATURE_LENGTH_IN_BYTES + BLOB_DATA_SIZE_LENGTH_IN_BYTES
   data: commonValidations.hex,
@@ -23,7 +23,7 @@ export const PartialBlobSchema = PartialBlobSubmissionSchema.extend({
   updatedAt: z.date(),
   fusedBlobId: z.number().nullable(),
   fusedBlobPosition: z.number().nullable(),
-  cost: z.number().nullable(),
+  costInGwei: z.coerce.bigint().nullable(),
 });
 
 export type PartialBlobInDB = z.infer<typeof PartialBlobDatabaseSchema>;

@@ -67,7 +67,7 @@ export const partialBlobRouter: Router = (() => {
     validateRequest(PostPartialBlobSchema),
     async (req: Request, res: Response) => {
       const { body } = PostPartialBlobSchema.parse(req);
-      const { signature, data, fromAddress, bid } = body;
+      const { signature, data, fromAddress, bidInGwei } = body;
 
       const signatureIsValid = await blobSubmitterPublicClient.verifyMessage({
         address: fromAddress,
@@ -89,7 +89,7 @@ export const partialBlobRouter: Router = (() => {
         address: fromAddress,
       });
 
-      if (userBalance < bid) {
+      if (userBalance < bidInGwei) {
         res.status(StatusCodes.FORBIDDEN).json({
           success: false,
           message: "Insufficient balance",
@@ -101,6 +101,7 @@ export const partialBlobRouter: Router = (() => {
 
       const createdPartialBlob = await partialBlobRepository.createAsync(body);
 
+      // @ts-expect-error BigInt is not serializable
       BigInt.prototype.toJSON = function () {
         return this.toString();
       };

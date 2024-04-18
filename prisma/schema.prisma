@@ -21,7 +21,7 @@ model User {
 
 model Deposit {
   id          Int      @id @default(autoincrement())
-  amount      BigInt
+  valueInGwei BigInt
   fromAddress String
   owner       User     @relation(fields: [fromAddress], references: [address])
   txHash      String   @unique
@@ -30,7 +30,7 @@ model Deposit {
 
 model PartialBlob {
   id                Int        @id @default(autoincrement())
-  bid               BigInt
+  bidInGwei         BigInt
   signature         String
   data              Bytes
   fromAddress       String
@@ -38,7 +38,7 @@ model PartialBlob {
   fusedBlob         FusedBlob? @relation(fields: [fusedBlobId], references: [id])
   fusedBlobId       Int? // Might be null if not yet included
   fusedBlobPosition Int? // "" 
-  cost              BigInt? // ""
+  costInGwei        BigInt? // ""
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

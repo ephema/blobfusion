@@ -11,11 +11,11 @@ export const userRepository = {
       by: ["fromAddress"],
       where: { fromAddress: address },
       _sum: {
-        amount: true,
+        valueInGwei: true,
       },
     });
 
-    const userDeposits = depositResult?.[0]?._sum.amount ?? 0n;
+    const userDeposits = depositResult?.[0]?._sum.valueInGwei ?? 0n;
 
     // TODO: There could be a race condition hiding here
     // if a user submitted a blob (i.e. has a fusedBlobId) but
@@ -26,7 +26,7 @@ export const userRepository = {
       by: ["fromAddress"],
       where: { fromAddress: address, fusedBlobId: { not: null } },
       _sum: {
-        cost: true,
+        costInGwei: true,
       },
     });
 
@@ -34,12 +34,12 @@ export const userRepository = {
       by: ["fromAddress"],
       where: { fromAddress: address, fusedBlobId: null },
       _sum: {
-        bid: true,
+        bidInGwei: true,
       },
     });
 
-    const userCosts = partialBlobCostResult?.[0]?._sum.cost ?? 0n;
-    const openBids = openBidsResult?.[0]?._sum.bid ?? 0n;
+    const userCosts = partialBlobCostResult?.[0]?._sum.costInGwei ?? 0n;
+    const openBids = openBidsResult?.[0]?._sum.bidInGwei ?? 0n;
 
     const balance = userDeposits - (userCosts + openBids);
 

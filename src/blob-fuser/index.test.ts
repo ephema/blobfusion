@@ -5,27 +5,27 @@ import { fusePartialBlobs, getDataLengthInHex, unfuseFusedBlob } from "./index";
 const partialBlobFixtures: PartialBlob[] = [
   {
     id: 9,
-    bid: 4,
+    bidInGwei: 4n,
     signature:
       "0x21fbf0696d5e0aa2ef41a2b4ffb623bcaf070461d61cf7251c74161f82fec3a4370854bc0a34b3ab487c1bc021cd318c734c51ae29374f2beb0e6f2dd49b4bf41c",
     data: "0x1234567890abcdef", // Assumption: data always represents bytes as a hex string => 0x + even number of hex chars
     fromAddress: "0xd90027769915dce53278204189E77705075DC4d2",
     fusedBlobId: null,
     fusedBlobPosition: null,
-    cost: null,
+    costInGwei: null,
     createdAt: new Date("2024-04-12T13:38:00.453Z"),
     updatedAt: new Date("2024-04-12T13:38:00.453Z"),
   },
   {
     id: 10,
-    bid: 4,
+    bidInGwei: 4n,
     signature:
       "0x1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
     data: "0x22222222222222222222222222",
     fromAddress: "0x837B7Dacc88c2E5316Dfb5C7B51b98eEf9e12DA0",
     fusedBlobId: null,
     fusedBlobPosition: null,
-    cost: null,
+    costInGwei: null,
     createdAt: new Date("2024-04-12T13:39:39.285Z"),
     updatedAt: new Date("2024-04-12T13:39:39.285Z"),
   },

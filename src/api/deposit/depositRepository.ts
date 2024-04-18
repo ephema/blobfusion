@@ -6,17 +6,17 @@ export const depositRepository = {
   createIfNeededAsync: async ({
     txHash,
     fromAddress,
-    amount,
+    valueInGwei,
   }: {
     txHash: Hex;
     fromAddress: Hex;
-    amount: bigint;
+    valueInGwei: bigint;
   }): Promise<number> => {
     const { id: depositId } = await prisma.deposit.upsert({
       where: { txHash },
       create: {
         txHash,
-        amount,
+        valueInGwei,
         owner: {
           connectOrCreate: {
             where: { address: fromAddress },

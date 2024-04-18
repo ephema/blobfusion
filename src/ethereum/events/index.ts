@@ -5,11 +5,11 @@ import {
   subscribeToDepositEvents,
 } from "./subscribeToDepositEvents";
 
-const onDeposit = async ({ txHash, depositor, amount }: DepositEvent) => {
+const onDeposit = async ({ txHash, depositor, valueInGwei }: DepositEvent) => {
   await depositRepository.createIfNeededAsync({
     txHash,
     fromAddress: depositor,
-    amount,
+    valueInGwei,
   });
 };
 
