@@ -90,9 +90,9 @@ export const partialBlobRouter: Router = (() => {
       });
 
       if (userBalance < bidInGwei) {
-        res.status(StatusCodes.FORBIDDEN).json({
+        res.status(StatusCodes.PAYMENT_REQUIRED).json({
           success: false,
-          message: "Insufficient balance",
+          message: `Bid (${bidInGwei} gwei) was higher than available balance of ${userBalance} gwei`,
           data: null,
         });
 

@@ -45,10 +45,10 @@ model PartialBlob {
 }
 
 model FusedBlob {
-  id           Int           @id @default(autoincrement())
-  txHash       String? // Might be null until sent to network
-  totalCost    Int?
-  partialBlobs PartialBlob[]
+  id              Int           @id @default(autoincrement())
+  txHash          String? // Might be null until sent to network
+  totalCostInGwei BigInt?
+  partialBlobs    PartialBlob[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

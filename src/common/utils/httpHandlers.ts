@@ -20,17 +20,32 @@ export const validateRequest =
       schema.parse({ body: req.body, query: req.query, params: req.params });
       next();
     } catch (err) {
-      const errorMessage = `Invalid input: ${(err as ZodError).errors.map((e) => `${e.path.join(".")}: ${e.message}`).join(", ")}`;
       const statusCode = StatusCodes.BAD_REQUEST;
-      res
-        .status(statusCode)
-        .send(
-          new ServiceResponse<null>(
-            ResponseStatus.Failed,
-            errorMessage,
-            null,
-            statusCode,
-          ),
-        );
+
+      if (err instanceof ZodError) {
+        const errorMessage = `Invalid input: ${err.errors.map((e) => `${e.path.join(".")}: ${e.message}`)?.join(", ")}`;
+
+        res
+          .status(statusCode)
+          .send(
+            new ServiceResponse<null>(
+              ResponseStatus.Failed,
+              errorMessage,
+              null,
+              statusCode,
+            ),
+          );
+      } else {
+        res
+          .status(statusCode)
+          .send(
+            new ServiceResponse<null>(
+              ResponseStatus.Failed,
+              `Request validation failed: ${err.message}`,
+              null,
+              statusCode,
+            ),
+          );
+      }
     }
   };
