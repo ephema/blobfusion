@@ -20,7 +20,8 @@
     "release": "release-it",
     "test:hardhat": "npm run build:hardhat && hardhat test",
     "build:hardhat": "hardhat compile",
-    "deploy-hardhat": "npx hardhat ignition deploy ./src/ethereum/ignition/modules/BlobFusion.ts --network localhost"
+    "deploy-hardhat": "npx hardhat ignition deploy ./src/ethereum/ignition/modules/BlobFusion.ts --network localhost",
+    "hardhat-network": "npx hardhat node"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
