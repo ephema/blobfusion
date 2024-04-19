@@ -48,6 +48,7 @@ const swr = createStaleWhileRevalidateCache({
   },
 });
 
+// As specified in https://eips.ethereum.org/EIPS/eip-4844#gas-accounting
 const getBaseFeePerBlobGas = (excessBlobGas: bigint) => {
   return fakeExponential(
     MIN_BASE_FEE_PER_BLOB_GAS,
