@@ -4,6 +4,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { env } from "@/common/utils/envConfig";
 
 import {
+  BLOBSCAN_BASE_URLS,
   getBlobSubmissionChainFromId,
   getDepositContractChainFromId,
 } from "./supportedChains";
@@ -18,6 +19,8 @@ export const blobSubmitterPublicClient = createPublicClient({
   chain: getBlobSubmissionChainFromId(env.BLOB_SUBMITTER_CHAIN_ID),
   transport: http(blobSubmitterRpcUrl ? blobSubmitterRpcUrl : undefined),
 });
+export const BLOBSCAN_BASE_URL =
+  BLOBSCAN_BASE_URLS[env.BLOB_SUBMITTER_CHAIN_ID];
 
 const depositContractRpcUrl = env.DEPOSIT_CONTRACT_RPC_URL;
 export const depositContractWalletClient = createWalletClient({

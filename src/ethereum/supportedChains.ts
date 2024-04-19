@@ -17,6 +17,14 @@ export const SUPPORTED_BLOB_SUBMISSION_CHAINS = [
   holesky,
   gnosis,
 ] as const;
+
+export const BLOBSCAN_BASE_URLS = {
+  [sepolia.id]: "https://api.sepolia.blobscan.com",
+  [mainnet.id]: "https://api.blobscan.com",
+  [holesky.id]: "https://api.holesky.blobscan.com",
+  [gnosis.id]: "https://api.gnosis.blobscan.com",
+} as const;
+
 export const getBlobSubmissionChainFromId = (
   chainId: SupportedBlobSubmissionChainId,
 ) => SUPPORTED_BLOB_SUBMISSION_CHAINS.find((chain) => chain.id === chainId);

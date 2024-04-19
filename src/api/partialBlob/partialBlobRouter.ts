@@ -2,13 +2,14 @@
 import express, { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 
+import { userRepository } from "@/api/user/userRepository";
 import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
+import { getBlobGasEstimate } from "@/ethereum/estimateBlobGas";
 import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
 import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 
-import { userRepository } from "../user/userRepository";
 import {
   GetPartialBlobSchema,
   PostPartialBlobSchema,
@@ -113,6 +114,20 @@ export const partialBlobRouter: Router = (() => {
       });
     },
   );
+
+  router.get("/fees", async (req: Request, res: Response) => {
+    const feeHistory = await getBlobGasEstimate();
+
+    // @ts-expect-error BigInt is not serializable
+    BigInt.prototype.toJSON = function () {
+      return this.toString();
+    };
+
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: feeHistory,
+    });
+  });
 
   router.get(
     "/:id",
