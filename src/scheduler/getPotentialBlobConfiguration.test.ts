@@ -46,7 +46,7 @@ describe("buildFusedBlobConfiguration", () => {
     expect(
       buildFusedBlobConfiguration({
         partialBlobs: [partialBlob],
-        totalTransactionCost: 100n,
+        totalCostInGwei: 100n,
       }),
     ).toEqual([partialBlob]);
   });
@@ -55,7 +55,7 @@ describe("buildFusedBlobConfiguration", () => {
     expect(
       buildFusedBlobConfiguration({
         partialBlobs: [makePartialBlobFixture({ bidInGwei: 50n })],
-        totalTransactionCost: 100n,
+        totalCostInGwei: 100n,
       }),
     ).toEqual([]);
   });
@@ -69,7 +69,7 @@ describe("buildFusedBlobConfiguration", () => {
             dataLength: MAX_BLOB_SIZE_IN_BYTES,
           }),
         ],
-        totalTransactionCost: 100n,
+        totalCostInGwei: 100n,
       }),
     ).toEqual([]);
   });
@@ -85,7 +85,7 @@ describe("buildFusedBlobConfiguration", () => {
     expect(
       buildFusedBlobConfiguration({
         partialBlobs,
-        totalTransactionCost: 300n,
+        totalCostInGwei: 300n,
       }),
     ).toEqual(partialBlobs);
   });
@@ -109,7 +109,7 @@ describe("buildFusedBlobConfiguration", () => {
 
     const blobConfiguration = buildFusedBlobConfiguration({
       partialBlobs,
-      totalTransactionCost: 400n,
+      totalCostInGwei: 400n,
     });
 
     expect(blobConfiguration.length).toBe(4);
@@ -133,7 +133,7 @@ describe("buildFusedBlobConfiguration", () => {
 
     const blobConfiguration = buildFusedBlobConfiguration({
       partialBlobs,
-      totalTransactionCost: 100n,
+      totalCostInGwei: 100n,
     });
 
     expect(blobConfiguration.length).toBe(4);
@@ -157,7 +157,7 @@ describe("buildFusedBlobConfiguration", () => {
 
     const blobConfiguration = buildFusedBlobConfiguration({
       partialBlobs,
-      totalTransactionCost: 90n,
+      totalCostInGwei: 90n,
     });
 
     expect(blobConfiguration.length).toBe(3);
@@ -166,7 +166,7 @@ describe("buildFusedBlobConfiguration", () => {
 
   it("should return an empty configuration when the consecutive bids are too low", () => {
     // Even though there is a configuration here that would satisfy
-    // sumOfBids < totalTransactionCost, the cost for each PartialBlob
+    // sumOfBids < totalCostInGwei, the cost for each PartialBlob
     // is still higher than their bid because it is split based on dataLength
     const pBlob1 = makePartialBlobFixture({ bidInGwei: 10n, dataLength: 100 });
     const pBlob2 = makePartialBlobFixture({ bidInGwei: 20n, dataLength: 100 });
@@ -178,7 +178,7 @@ describe("buildFusedBlobConfiguration", () => {
 
     const blobConfiguration = buildFusedBlobConfiguration({
       partialBlobs,
-      totalTransactionCost: 100n,
+      totalCostInGwei: 100n,
     });
 
     expect(blobConfiguration.length).toBe(0);

@@ -1,5 +1,3 @@
-import { formatGwei } from "viem";
-
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
 import {
   GAS_PER_BLOB,
@@ -20,7 +18,7 @@ export const getPotentialBlobConfiguration = async (
 ) => {
   const blobGasEstimate = await getBlobGasPriceEstimate();
 
-  const totalTransactionCost = calculateTotalTxCost({
+  const totalCostInGwei = calculateTotalTxCost({
     blobGasPrice: blobGasEstimate,
     blobGasUsed: GAS_PER_BLOB,
     gasUsed: GAS_PER_TX,
@@ -29,10 +27,13 @@ export const getPotentialBlobConfiguration = async (
 
   schedulerLogger.info(
     "Current estimated txCost for one blob is %s gwei",
-    formatGwei(totalTransactionCost),
+    totalCostInGwei,
   );
 
-  return buildFusedBlobConfiguration({ partialBlobs, totalTransactionCost });
+  return buildFusedBlobConfiguration({
+    partialBlobs,
+    totalCostInGwei,
+  });
 };
 
 // Blob Building is a variant of the Knapsack Problem, which is NP-Hard.
@@ -47,16 +48,16 @@ export const getPotentialBlobConfiguration = async (
 // 2. Each PartialBlob's bid in the FusedBlob is greater than its cost
 export const buildFusedBlobConfiguration = ({
   partialBlobs,
-  totalTransactionCost,
+  totalCostInGwei,
 }: {
   partialBlobs: PartialBlob[];
-  totalTransactionCost: bigint;
+  totalCostInGwei: bigint;
 }) => {
   let done = false;
   let selectedPartialBlobs = partialBlobs;
   while (!done) {
     const selectedPartialBlobsWithCost = calculateCostPerPartialBlob({
-      totalCostInGwei: totalTransactionCost,
+      totalCostInGwei,
       partialBlobs: selectedPartialBlobs,
     });
 
