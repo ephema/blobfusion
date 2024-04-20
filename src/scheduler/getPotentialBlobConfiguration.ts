@@ -52,31 +52,62 @@ export const buildFusedBlobConfiguration = ({
       partialBlobs: selectedPartialBlobs,
     });
 
-    const newSelectedPartialBlobs = selectedPartialBlobsWithCost.filter(
-      (partialBlob) => partialBlob.costInGwei > partialBlob.bidInGwei,
+    const partialBlobsWithHighEnoughBid = selectedPartialBlobsWithCost.filter(
+      (partialBlob) => partialBlob.bidInGwei >= partialBlob.costInGwei,
     );
 
-    const noBlobsLeft = newSelectedPartialBlobs.length === 0;
-    if (noBlobsLeft) {
-      done = true;
-    }
-
-    const totalLength = newSelectedPartialBlobs.reduce(
+    const totalLength = partialBlobsWithHighEnoughBid.reduce(
       (acc, partialBlob) => acc + partialBlob.dataLength,
       0,
     );
+    if (totalLength > MAX_BLOB_SIZE_IN_BYTES) {
+      // Remove the blob with the lowest difference between bid and cost
+      const blobToRemove = partialBlobsWithHighEnoughBid.reduce(
+        (acc, partialBlob) => {
+          const difference = partialBlob.bidInGwei - partialBlob.costInGwei;
+
+          if (acc.maxDifference === null) {
+            return { maxDifference: difference, partialBlob };
+          }
+
+          return difference < acc.maxDifference
+            ? { maxDifference: difference, partialBlob }
+            : acc;
+        },
+        { maxDifference: null, partialBlob: null } as {
+          maxDifference: bigint | null;
+          partialBlob: PartialBlob | null;
+        },
+      ).partialBlob;
+
+      selectedPartialBlobs = partialBlobsWithHighEnoughBid.filter(
+        (partialBlob) => partialBlob !== blobToRemove,
+      );
+
+      continue;
+    }
 
     const noBlobsRemoved =
-      newSelectedPartialBlobs.length === selectedPartialBlobs.length;
-    const fusedBlobIsTooBig = totalLength > MAX_BLOB_SIZE_IN_BYTES;
-    if (noBlobsRemoved && !fusedBlobIsTooBig) {
+      partialBlobsWithHighEnoughBid.length ===
+      selectedPartialBlobsWithCost.length;
+    const noBlobsLeft = partialBlobsWithHighEnoughBid.length === 0;
+
+    if (noBlobsRemoved || noBlobsLeft) {
       done = true;
     }
 
-    // TODO add case where we remove a blob when the size constraint doesn't work anymore
-
-    selectedPartialBlobs = newSelectedPartialBlobs;
+    selectedPartialBlobs = partialBlobsWithHighEnoughBid;
   }
 
-  return selectedPartialBlobs;
+  return selectedPartialBlobs.map((partialBlob) => {
+    const originalPartialBlob = {
+      ...partialBlob,
+      costInGwei: null,
+      dataLength: undefined,
+    };
+
+    delete originalPartialBlob.dataLength;
+
+    return originalPartialBlob;
+  });
 };

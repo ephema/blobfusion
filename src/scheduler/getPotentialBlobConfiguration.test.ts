@@ -1,16 +1,21 @@
 import { Hex } from "viem";
 
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
-import { HEX_MULTIPLIER, MAX_BLOB_SIZE_IN_BYTES } from "@/common/constants";
+import {
+  BLOB_DATA_SIZE_LENGTH_IN_BYTES,
+  HEX_MULTIPLIER,
+  MAX_BLOB_SIZE_IN_BYTES,
+  SIGNATURE_LENGTH_IN_BYTES,
+} from "@/common/constants";
 
 import { buildFusedBlobConfiguration } from "./getPotentialBlobConfiguration";
 
 const makePartialBlobFixture = ({
   bidInGwei,
-  dataLength,
+  dataLength = 100,
 }: {
   bidInGwei: bigint;
-  dataLength: number;
+  dataLength?: number;
 }): PartialBlob => {
   const data = `0x${"1".repeat(dataLength * HEX_MULTIPLIER)}` as Hex;
   return {
@@ -29,10 +34,13 @@ const makePartialBlobFixture = ({
 };
 
 describe("buildFusedBlobConfiguration", () => {
-  it("should fuse one partial blob that fills the entire fusedBlob and has a high-enough bid", () => {
+  it("should include a partial blob with the maximum data length and minimum bid", () => {
     const partialBlob = makePartialBlobFixture({
       bidInGwei: 100n,
-      dataLength: MAX_BLOB_SIZE_IN_BYTES / 2,
+      dataLength:
+        MAX_BLOB_SIZE_IN_BYTES -
+        SIGNATURE_LENGTH_IN_BYTES -
+        BLOB_DATA_SIZE_LENGTH_IN_BYTES,
     });
 
     expect(
@@ -42,10 +50,138 @@ describe("buildFusedBlobConfiguration", () => {
       }),
     ).toEqual([partialBlob]);
   });
-  it("should fuse three blobs that have a high-enough bid", () => {});
-  it("should fuse five blobs that are bigger than the maximum blob size", () => {});
-  it("should return a configuration where partial blobs are removed whose bid is too small, but the others stay included", () => {});
-  it("should return a configuration where partial blobs are removed whose bid is too small, but the others stay included 2", () => {});
-  it("should return an empty configuration when the bids are too low", () => {});
-  it("should return an empty configuration when the bids are too low 2", () => {});
+
+  it("should not include a partial blob whose bid is too small", () => {
+    expect(
+      buildFusedBlobConfiguration({
+        partialBlobs: [makePartialBlobFixture({ bidInGwei: 50n })],
+        totalTransactionCost: 100n,
+      }),
+    ).toEqual([]);
+  });
+
+  it("should not include a partial blob that is too big", () => {
+    expect(
+      buildFusedBlobConfiguration({
+        partialBlobs: [
+          makePartialBlobFixture({
+            bidInGwei: 100n,
+            dataLength: MAX_BLOB_SIZE_IN_BYTES,
+          }),
+        ],
+        totalTransactionCost: 100n,
+      }),
+    ).toEqual([]);
+  });
+
+  it("should include three blobs that have a high-enough bid", () => {
+    const partialBlob = makePartialBlobFixture({
+      bidInGwei: 100n,
+      dataLength: 500,
+    });
+
+    const partialBlobs = [partialBlob, partialBlob, partialBlob];
+
+    expect(
+      buildFusedBlobConfiguration({
+        partialBlobs,
+        totalTransactionCost: 300n,
+      }),
+    ).toEqual(partialBlobs);
+  });
+  it("should include a subset of five blobs that are bigger than the maximum blob size", () => {
+    const partialBlob = makePartialBlobFixture({
+      bidInGwei: 100n,
+      // each PartialBlob fills an exact quarter of a FusedBlob
+      dataLength:
+        MAX_BLOB_SIZE_IN_BYTES / 4 -
+        SIGNATURE_LENGTH_IN_BYTES -
+        BLOB_DATA_SIZE_LENGTH_IN_BYTES,
+    });
+
+    const partialBlobs = [
+      partialBlob,
+      partialBlob,
+      partialBlob,
+      partialBlob,
+      partialBlob,
+    ];
+
+    const blobConfiguration = buildFusedBlobConfiguration({
+      partialBlobs,
+      totalTransactionCost: 400n,
+    });
+
+    expect(blobConfiguration.length).toBe(4);
+    expect(blobConfiguration).toEqual(partialBlobs.slice(0, 4));
+  });
+
+  it("should return a configuration where partial blobs are removed whose bid is too small, but the others stay included", () => {
+    const partialBlob = makePartialBlobFixture({ bidInGwei: 100n });
+
+    const partialBlobWithTooSmallBid = makePartialBlobFixture({
+      bidInGwei: 10n,
+    });
+
+    const partialBlobs = [
+      partialBlob,
+      partialBlob,
+      partialBlob,
+      partialBlob,
+      partialBlobWithTooSmallBid,
+    ];
+
+    const blobConfiguration = buildFusedBlobConfiguration({
+      partialBlobs,
+      totalTransactionCost: 100n,
+    });
+
+    expect(blobConfiguration.length).toBe(4);
+    expect(blobConfiguration).toEqual(partialBlobs.slice(0, 4));
+  });
+
+  it("should return a configuration where partial blobs are removed whose bid is too small, but the others stay included (2)", () => {
+    const partialBlob1 = makePartialBlobFixture({ bidInGwei: 10n });
+    const partialBlob2 = makePartialBlobFixture({ bidInGwei: 20n });
+    const partialBlob3 = makePartialBlobFixture({ bidInGwei: 30n });
+    const partialBlob4 = makePartialBlobFixture({ bidInGwei: 40n });
+    const partialBlob5 = makePartialBlobFixture({ bidInGwei: 50n });
+
+    const partialBlobs = [
+      partialBlob1,
+      partialBlob2,
+      partialBlob3,
+      partialBlob4,
+      partialBlob5,
+    ];
+
+    const blobConfiguration = buildFusedBlobConfiguration({
+      partialBlobs,
+      totalTransactionCost: 90n,
+    });
+
+    expect(blobConfiguration.length).toBe(3);
+    expect(blobConfiguration).toEqual(partialBlobs.slice(2, 5));
+  });
+
+  it("should return an empty configuration when the consecutive bids are too low", () => {
+    // Even though there is a configuration here that would satisfy
+    // sumOfBids < totalTransactionCost, the cost for each PartialBlob
+    // is still higher than their bid because it is split based on dataLength
+    const pBlob1 = makePartialBlobFixture({ bidInGwei: 10n, dataLength: 100 });
+    const pBlob2 = makePartialBlobFixture({ bidInGwei: 20n, dataLength: 100 });
+    const pBlob3 = makePartialBlobFixture({ bidInGwei: 30n, dataLength: 100 });
+    const pBlob4 = makePartialBlobFixture({ bidInGwei: 40n, dataLength: 100 });
+    const pBlob5 = makePartialBlobFixture({ bidInGwei: 50n, dataLength: 100 });
+
+    const partialBlobs = [pBlob1, pBlob2, pBlob3, pBlob4, pBlob5];
+
+    const blobConfiguration = buildFusedBlobConfiguration({
+      partialBlobs,
+      totalTransactionCost: 100n,
+    });
+
+    expect(blobConfiguration.length).toBe(0);
+    expect(blobConfiguration).toEqual([]);
+  });
 });
