@@ -21,7 +21,11 @@ const FusedBlobList: React.FC<{ blobs: PartialBlobProps[] }> = ({ blobs }) => (
       className="max-w-[650px] overflow-hidden rounded-sm"
     >
       {tx.map((address, index) => (
-        <AccordionItem value={`item-${index}`} className="border-slate-600">
+        <AccordionItem
+          value={`item-${index}`}
+          className="border-slate-600"
+          key={index}
+        >
           <AccordionTrigger className=" bg-slate-700/50 px-4 backdrop-blur-md">
             {address}
           </AccordionTrigger>
