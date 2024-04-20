@@ -3,6 +3,8 @@ import { Inter as FontSans } from "next/font/google";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { BackgroundGradients } from "@/components/BackgroundGradients";
+
 import { queryClient } from "@/data/queryClient";
 import { cn } from "@/lib/utils";
 
@@ -30,10 +32,13 @@ export default function RootLayout({
         )}
       >
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <div className="mx-auto h-screen min-h-screen p-8 md:max-w-4xl">
-              {children}
-            </div>
+          <ThemeProvider attribute="class" defaultTheme="dark">
+            <section className="dark relative overflow-hidden">
+              <BackgroundGradients />
+              <div className="mx-auto min-h-screen p-8 md:max-w-3xl">
+                {children}
+              </div>
+            </section>
           </ThemeProvider>
         </QueryClientProvider>
       </body>
