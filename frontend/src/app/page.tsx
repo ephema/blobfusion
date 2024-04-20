@@ -1,3 +1,4 @@
+import FusedBlobList from "@/components/FusedBlobList";
 import UnfusedBlobList from "@/components/UnfusedBlobList";
 import UserInfo from "@/components/UserInfo";
 
@@ -45,7 +46,7 @@ export default function Home() {
       <div className="mt-8 flex min-h-full flex-grow gap-16">
         <UnfusedBlobList blobs={blobs} />
         <div className="mt-16 h-full min-h-96 flex-grow border-l border-purple-300/30"></div>
-        <UnfusedBlobList blobs={blobs} />
+        <FusedBlobList blobs={blobs} />
       </div>
     </div>
   );
