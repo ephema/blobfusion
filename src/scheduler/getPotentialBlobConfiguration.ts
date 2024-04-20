@@ -1,21 +1,24 @@
+import { formatGwei } from "viem";
+
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
 import {
   GAS_PER_BLOB,
   GAS_PER_TX,
   MAX_BLOB_SIZE_IN_BYTES,
 } from "@/common/constants";
-import { getBlobGasEstimate } from "@/ethereum/gas/estimateBlobGas";
+import { getBlobGasPriceEstimate } from "@/ethereum/gas/getBlobGasPriceEstimate";
 import { getCurrentGasPrice } from "@/ethereum/gas/getCurrentGasPrice";
 
 import {
   calculateCostPerPartialBlob,
   calculateTotalTxCost,
 } from "./costCalculation";
+import { schedulerLogger } from "./logger";
 
 export const getPotentialBlobConfiguration = async (
   partialBlobs: PartialBlob[],
 ) => {
-  const blobGasEstimate = await getBlobGasEstimate();
+  const blobGasEstimate = await getBlobGasPriceEstimate();
 
   const totalTransactionCost = calculateTotalTxCost({
     blobGasPrice: blobGasEstimate,
@@ -23,6 +26,11 @@ export const getPotentialBlobConfiguration = async (
     gasUsed: GAS_PER_TX,
     effectiveGasPrice: await getCurrentGasPrice(),
   });
+
+  schedulerLogger.info(
+    "Current estimated txCost for one blob is %s gwei",
+    formatGwei(totalTransactionCost),
+  );
 
   return buildFusedBlobConfiguration({ partialBlobs, totalTransactionCost });
 };

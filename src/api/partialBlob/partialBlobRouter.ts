@@ -6,7 +6,7 @@ import { userRepository } from "@/api/user/userRepository";
 import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
-import { getBlobGasEstimate } from "@/ethereum/gas/estimateBlobGas";
+import { getBlobGasPriceEstimate } from "@/ethereum/gas/getBlobGasPriceEstimate";
 import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
 import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 
@@ -116,7 +116,7 @@ export const partialBlobRouter: Router = (() => {
   );
 
   router.get("/fees", async (req: Request, res: Response) => {
-    const feeHistory = await getBlobGasEstimate();
+    const feeHistory = await getBlobGasPriceEstimate();
 
     // @ts-expect-error BigInt is not serializable
     BigInt.prototype.toJSON = function () {

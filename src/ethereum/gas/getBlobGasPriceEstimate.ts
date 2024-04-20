@@ -15,7 +15,7 @@ import { BLOBSCAN_BASE_URL } from "@/ethereum/viemClients";
 // Blobscan is sometimes really slow, so using a stale-while-revalidate cache
 // to keep impact low
 
-export const getBlobGasEstimate = async () => {
+export const getBlobGasPriceEstimate = async () => {
   const resultFromSwrCache = await swr("blobscan-result", async () => {
     const response = await axios.get(
       `${BLOBSCAN_BASE_URL}/blocks?sort=desc&type=canonical&p=1&ps=1`,
