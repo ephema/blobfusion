@@ -1,4 +1,4 @@
-import { type Hex } from "viem";
+import { type Hex, toBlobs } from "viem";
 
 import { getBlobGasEstimate } from "@/ethereum/gas/estimateBlobGas";
 
@@ -10,7 +10,7 @@ export const sendBlobTransaction = async ({ data }: { data: Hex }) => {
   const maxFeePerBlobGas = await getBlobGasEstimate();
 
   return blobSubmitterWalletClient.sendTransaction({
-    blobs: [data],
+    blobs: toBlobs({ data }),
     kzg,
     to: "0x0000000000000000000000000000000000000000",
     maxFeePerBlobGas,
