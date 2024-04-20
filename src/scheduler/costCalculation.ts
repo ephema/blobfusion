@@ -37,6 +37,10 @@ export const calculateCostPerPartialBlob = ({
   totalCostInGwei: bigint;
   partialBlobs: PartialBlob[];
 }) => {
+  if (partialBlobs.length === 0) {
+    return [];
+  }
+
   const partialBlobsWithLength = partialBlobs.map((blob) => ({
     ...blob,
     dataLength: getBlobDataLength(blob.data),
