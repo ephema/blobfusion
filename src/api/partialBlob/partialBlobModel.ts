@@ -11,7 +11,6 @@ export type PartialBlobSubmission = z.infer<typeof PartialBlobSubmissionSchema>;
 export const PartialBlobSubmissionSchema = z.object({
   bidInGwei: z.coerce.bigint(),
   signature: commonValidations.signature,
-  // TODO: data has to be smaller than MAX_BLOB_SIZE_IN_BYTES + SIGNATURE_LENGTH_IN_BYTES + BLOB_DATA_SIZE_LENGTH_IN_BYTES
   data: commonValidations.hex,
   fromAddress: commonValidations.address,
 });

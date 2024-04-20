@@ -6,7 +6,7 @@ import { userRepository } from "@/api/user/userRepository";
 import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
-import { getBlobGasEstimate } from "@/ethereum/estimateBlobGas";
+import { getBlobGasEstimate } from "@/ethereum/gas/estimateBlobGas";
 import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
 import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 

@@ -1,7 +1,6 @@
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
-import { GAS_PER_BLOB, GAS_PER_TX } from "@/common/constants";
-import { getBlobGasEstimate } from "@/ethereum/estimateBlobGas";
-import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
+import { getBlobGasEstimate } from "@/ethereum/gas/estimateBlobGas";
+import { getCurrentGasPrice } from "@/ethereum/gas/getCurrentGasPrice";
 
 import {
   calculateCostPerPartialBlob,

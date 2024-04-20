@@ -1,10 +1,5 @@
-import { toBytes } from "viem";
-
 import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
-import {
-  BLOB_DATA_SIZE_LENGTH_IN_BYTES,
-  SIGNATURE_LENGTH_IN_BYTES,
-} from "@/common/constants";
+import { getBlobDataLength } from "@/ethereum/getBlobDataLength";
 
 import { schedulerLogger } from "./logger";
 
@@ -44,10 +39,7 @@ export const calculateCostPerPartialBlob = ({
 }) => {
   const partialBlobsWithLength = partialBlobs.map((blob) => ({
     ...blob,
-    dataLength:
-      SIGNATURE_LENGTH_IN_BYTES +
-      BLOB_DATA_SIZE_LENGTH_IN_BYTES +
-      toBytes(blob.data).length,
+    dataLength: getBlobDataLength(blob.data),
   }));
 
   const totalDataLength = partialBlobsWithLength.reduce(
