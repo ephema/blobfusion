@@ -24,7 +24,7 @@ export const fuseAndSendBlobs = async () => {
   schedulerLogger.info("%d unfused partial blobs found", partialBlobs.length);
 
   const blobsToFuse = await getPotentialBlobConfiguration(partialBlobs);
-  if (!blobsToFuse) {
+  if (blobsToFuse.length === 0) {
     schedulerLogger.info(
       "Didn't find configuration to fuse partial blobs. Waiting for more blobs to be submitted",
     );
