@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "./ui/button";
 
-const UserInfo: React.FC = () => {
+const UserInfo = () => {
   return (
     <Card className="min-w-[500px] bg-background/40 backdrop-blur-md">
       <CardContent className="mt-4 flex justify-between gap-2">
@@ -17,7 +17,7 @@ const UserInfo: React.FC = () => {
             <h1 className="text-2xl font-bold text-foreground">0.00 ETH</h1>
           </div>
         </div>
-        <div className="flex w-36 flex-col justify-end gap-2">
+        <div className="flex w-36 flex-col justify-center gap-2">
           <Button variant="outline" className="bg-background/40">
             Add Funds
           </Button>
