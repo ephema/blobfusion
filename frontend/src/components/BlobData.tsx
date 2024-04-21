@@ -8,8 +8,6 @@ interface BlobDataProps {
 }
 
 const BlobData: React.FC<BlobDataProps> = ({ blobs }) => {
-  const isLoggedIn = false;
-
   return (
     <div
       className={cn(
