@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { toast } from "sonner";
-
 import {
   Dialog,
   DialogContent,
@@ -26,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const formSchema = z.object({
+export const addFundsFormSchema = z.object({
   amount: z.coerce.number().gt(0),
 });
 
@@ -37,37 +35,27 @@ const defaultValues = {
 type DialogProps = {
   dialogOpen: boolean;
   setDialogOpen: (isOpen: boolean) => void;
+  onSubmit: (values: z.infer<typeof addFundsFormSchema>) => void;
 };
 
 const AddFundsDialog: React.FC<DialogProps> = ({
   dialogOpen,
   setDialogOpen,
+  onSubmit,
 }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof addFundsFormSchema>>({
+    resolver: zodResolver(addFundsFormSchema),
     defaultValues,
   });
 
   const { formState, handleSubmit } = form;
   const { isSubmitting } = formState;
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const promise = new Promise((resolve) => setTimeout(resolve, 2000));
-    toast.promise(promise, {
-      loading: "Creating new transaction...",
-      success: () => {
-        return "Transaction sent. Funds will be picked up in just a moment...";
-      },
-      error: "There was an error adding funds. Please try again.",
-    });
-
-    await promise;
-    console.log(values);
-  }
-
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      open={dialogOpen}
+      onOpenChange={(open) => setDialogOpen(isSubmitting ? true : open)}
+    >
       <DialogContent className="sm:max-w-lg">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

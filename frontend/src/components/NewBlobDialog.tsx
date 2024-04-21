@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 
-const formSchema = z.object({
+export const newBlobFormSchema = z.object({
   blobContents: z.string().min(2).max(50),
   bidInGwei: z.coerce.number().positive().min(1).int(),
 });
@@ -40,38 +40,27 @@ const defaultValues = {
 type DialogProps = {
   dialogOpen: boolean;
   setDialogOpen: (isOpen: boolean) => void;
+  onSubmit: (values: z.infer<typeof newBlobFormSchema>) => void;
 };
 
 const NewBlobDialog: React.FC<DialogProps> = ({
   dialogOpen,
   setDialogOpen,
+  onSubmit,
 }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof newBlobFormSchema>>({
+    resolver: zodResolver(newBlobFormSchema),
     defaultValues,
   });
 
   const { formState, handleSubmit } = form;
   const { isSubmitting } = formState;
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const promise = new Promise((resolve) => setTimeout(resolve, 2000));
-    toast.promise(promise, {
-      loading: "Sending Blob...",
-      success: () => {
-        return "Blob successfully sent";
-      },
-      error:
-        "There was an error sending your blob. Please check the console for details.",
-    });
-
-    await promise;
-    console.log(values);
-  }
-
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      open={dialogOpen}
+      onOpenChange={(open) => setDialogOpen(isSubmitting ? true : open)}
+    >
       <DialogContent className="sm:max-w-lg">
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
