@@ -1,25 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
+import { isAddress, parseEther } from "viem";
 import {
   useAccount,
   useConnect,
   useSendTransaction,
   useSwitchChain,
 } from "wagmi";
-
 import { z } from "zod";
 
-import { toast } from "sonner";
-
-import Header from "@/components/Header";
-import UserInfo from "@/components/UserInfo";
-import BlobData from "@/components/BlobData";
-import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import AddFundsDialog, {
   addFundsFormSchema,
 } from "@/components/AddFundsDialog";
-import { isAddress, parseEther } from "viem";
+import BlobData from "@/components/BlobData";
+import Header from "@/components/Header";
+import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
+import UserInfo from "@/components/UserInfo";
 
 const blobs = [
   {

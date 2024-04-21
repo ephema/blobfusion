@@ -1,5 +1,5 @@
 import { extractChain } from "viem";
-import { http, createConfig } from "wagmi";
+import { createConfig, http } from "wagmi";
 import { arbitrum, hardhat } from "wagmi/chains";
 
 const supportedChains = [hardhat, arbitrum];

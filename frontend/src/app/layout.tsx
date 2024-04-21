@@ -1,17 +1,16 @@
 "use client";
+import "./globals.css";
+
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Inter as FontSans } from "next/font/google";
 import { WagmiProvider } from "wagmi";
-import { QueryClientProvider } from "@tanstack/react-query";
 
-import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { BackgroundGradients } from "@/components/BackgroundGradients";
-
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/sonner";
 import { queryClient } from "@/data/queryClient";
-import { wagmiConfig } from "@/lib/wagmiConfig";
 import { cn } from "@/lib/utils";
-
-import "./globals.css";
+import { wagmiConfig } from "@/lib/wagmiConfig";
 
 const fontSans = FontSans({
   subsets: ["latin"],

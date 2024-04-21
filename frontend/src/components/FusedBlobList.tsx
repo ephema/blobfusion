@@ -4,9 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { PartialBlob as PartialBlobType } from "@/lib/types";
 
 import { PartialBlob } from "./PartialBlob";
-import { PartialBlob as PartialBlobType } from "@/lib/types";
 
 const tx = [
   "0x222d39Ec6bb596229938210a0D57E5C17f479495",

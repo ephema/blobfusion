@@ -1,5 +1,6 @@
-import { PartialBlob } from "./PartialBlob";
 import { PartialBlob as PartialBlobType } from "@/lib/types";
+
+import { PartialBlob } from "./PartialBlob";
 
 const UnfusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => (
   <div className="w-full flex-grow">
