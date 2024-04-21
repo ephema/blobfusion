@@ -22,7 +22,8 @@
     "test:hardhat": "npm run build:hardhat && hardhat test",
     "build:hardhat": "hardhat compile",
     "deploy-hardhat": "npx hardhat ignition deploy ./src/ethereum/ignition/modules/BlobFusion.ts --network localhost",
-    "hardhat-network": "npx hardhat node"
+    "hardhat-network": "npx hardhat node",
+    "deploy-local-contract": "npx hardhat ignition deploy ./src/ethereum/ignition/modules/BlobFusion.ts --network localhost"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
