@@ -1,9 +1,11 @@
 "use client";
-import Header from "@/components/Header";
 
+import { useState } from "react";
+import { useAccount, useConnect } from "wagmi";
+import Header from "@/components/Header";
 import UserInfo from "@/components/UserInfo";
 import BlobData from "@/components/BlobData";
-import { useAccount, useConnect } from "wagmi";
+import NewBlobDialog from "@/components/NewBlobDialog";
 
 const blobs = [
   {
@@ -31,21 +33,26 @@ const blobs = [
 const Home = () => {
   const { connectors, connect } = useConnect();
   const { address, isConnected } = useAccount();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
-    <div className="mt-20 flex h-full flex-col items-center gap-4">
-      <Header />
-      <UserInfo
-        isConnected={isConnected}
-        address={address}
-        balance={0}
-        onAddFundsClick={console.log}
-        onNewBlobClick={console.log}
-        onConnectWalletClick={() => connect({ connector: connectors?.[0] })}
-      />
+    <>
+      <div className="mt-20 flex h-full flex-col items-center gap-4">
+        <Header />
+        <UserInfo
+          isConnected={isConnected}
+          address={address}
+          balance={0}
+          onAddFundsClick={console.log}
+          onNewBlobClick={() => setDialogOpen(true)}
+          onConnectWalletClick={() => connect({ connector: connectors?.[0] })}
+        />
 
-      <BlobData blobs={blobs} />
-    </div>
+        <BlobData blobs={blobs} />
+      </div>
+
+      <NewBlobDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+    </>
   );
 };
 

@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import { WagmiProvider } from "wagmi";
 import { QueryClientProvider } from "@tanstack/react-query";
 
+import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { BackgroundGradients } from "@/components/BackgroundGradients";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
                   {children}
                 </div>
               </section>
+              <Toaster />
             </ThemeProvider>
           </QueryClientProvider>
         </WagmiProvider>
