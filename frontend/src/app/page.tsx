@@ -19,32 +19,9 @@ import BlobData from "@/components/BlobData";
 import Header from "@/components/Header";
 import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import UserInfo from "@/components/UserInfo";
-import { useUserBalance } from "@/data/useUserBalance";
 import { useLatestBlobs } from "@/data/useLatestBlobs";
 import { useSubmitBlob } from "@/data/useSubmitBlob";
-
-const blobs = [
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-];
+import { useUserBalance } from "@/data/useUserBalance";
 
 const DEPOSIT_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_ADDRESS;

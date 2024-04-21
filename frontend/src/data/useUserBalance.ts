@@ -1,7 +1,7 @@
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Hex } from "viem";
 
 import { getUser } from "./api";
-import { Hex } from "viem";
 
 export const useUserBalance = ({ address }: { address?: Hex }) => {
   return useQuery({

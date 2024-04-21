@@ -1,7 +1,8 @@
+import seedRandom from "seed-random";
+
 import { PartialBlob as PartialBlobType } from "@/lib/types";
 
 import { Badge } from "./ui/badge";
-import seedRandom from "seed-random";
 
 export const PartialBlob: React.FC<PartialBlobType> = ({
   fromAddress,

@@ -1,5 +1,5 @@
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 
 import {
   Accordion,
