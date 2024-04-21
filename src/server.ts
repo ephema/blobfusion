@@ -9,7 +9,7 @@ import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 
-import { partialBlobRouter } from "./api/blobs/blobRouter";
+import { blobRouter } from "./api/blobs/blobRouter";
 
 const app: Express = express();
 
@@ -28,7 +28,7 @@ app.use(requestLogger());
 
 // Routes
 app.use("/health-check", healthCheckRouter);
-app.use("/blobs", partialBlobRouter);
+app.use("/blobs", blobRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

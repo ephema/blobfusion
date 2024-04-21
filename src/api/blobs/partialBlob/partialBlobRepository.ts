@@ -1,3 +1,5 @@
+import { Hex } from "viem";
+
 import { prisma } from "@/api/prisma/client";
 
 import {
@@ -6,6 +8,13 @@ import {
 } from "./convertPartialBlobInDBToPartialBlob";
 import { PartialBlob, PartialBlobSubmission } from "./partialBlobModel";
 
+type PartialBlobWithNullableDataAndSignature = Omit<
+  PartialBlob,
+  "data" | "signature"
+> & {
+  data: Hex | null;
+  signature: Hex | null;
+};
 export const partialBlobRepository = {
   createAsync: async (input: PartialBlobSubmission): Promise<PartialBlob> => {
     const { fromAddress, data, ...partialBlobData } = input;
@@ -25,9 +34,23 @@ export const partialBlobRepository = {
 
     return convertPartialBlobInDBToPartialBlob(partialBlobInDB);
   },
-  findAllAsync: async (): Promise<PartialBlob[]> => {
+  findAllAsync: async ({ withDataAndSignature = true } = {}): Promise<
+    PartialBlobWithNullableDataAndSignature[]
+  > => {
     const partialBlobsInDB = await prisma.partialBlob.findMany();
-    return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
+    const partialBlobs = partialBlobsInDB.map(
+      convertPartialBlobInDBToPartialBlob,
+    );
+
+    if (withDataAndSignature) {
+      return partialBlobs;
+    }
+
+    return partialBlobs.map((partialBlob) => ({
+      ...partialBlob,
+      data: null,
+      signature: null,
+    }));
   },
 
   findAllUnfusedAsync: async (): Promise<PartialBlob[]> => {

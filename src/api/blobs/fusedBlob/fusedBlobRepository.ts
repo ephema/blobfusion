@@ -3,7 +3,32 @@ import { type Hex } from "viem";
 import { type PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
 import { prisma } from "@/api/prisma/client";
 
+import { convertPartialBlobInDBToPartialBlob } from "../partialBlob/convertPartialBlobInDBToPartialBlob";
+import { type FusedBlob } from "./fusedBlobModel";
+
 export const fusedBlobRepository = {
+  findAllAsync: async ({ withDataAndSignature = true } = {}): Promise<
+    FusedBlob[]
+  > => {
+    const fusedBlobsInDB = await prisma.fusedBlob.findMany({
+      include: { partialBlobs: true },
+    });
+
+    return fusedBlobsInDB.map((fusedBlob) => ({
+      ...fusedBlob,
+      partialBlobs: fusedBlob.partialBlobs.map((partialBlob) => {
+        if (!withDataAndSignature) {
+          return {
+            ...partialBlob,
+            data: null,
+            signature: null,
+          };
+        }
+
+        return convertPartialBlobInDBToPartialBlob(partialBlob);
+      }),
+    }));
+  },
   createAsync: async ({
     blobIds,
   }: {

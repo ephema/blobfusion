@@ -3,13 +3,12 @@ import express, { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { userRepository } from "@/api/user/userRepository";
-import { fusePartialBlobs, unfuseFusedBlob } from "@/blob-fuser";
 // import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { getBlobGasPriceEstimate } from "@/ethereum/gas/getBlobGasPriceEstimate";
 import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
-import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 
+import { fusedBlobRepository } from "./fusedBlob/fusedBlobRepository";
 import {
   GetPartialBlobSchema,
   PostPartialBlobSchema,
@@ -20,7 +19,7 @@ import { partialBlobRepository } from "./partialBlob/partialBlobRepository";
 
 // partialBlobRegistry.register("PartialBlob", PartialBlobSchema);
 
-export const partialBlobRouter: Router = (() => {
+export const blobRouter: Router = (() => {
   const router = express.Router();
 
   // partialBlobRegistry.registerPath({
@@ -31,35 +30,21 @@ export const partialBlobRouter: Router = (() => {
   // });
 
   router.get("/", async (_req: Request, res: Response) => {
-    const partialBlobs = await partialBlobRepository.findAllAsync();
+    const [partialBlobs, fusedBlobs] = await Promise.all([
+      partialBlobRepository.findAllAsync({ withDataAndSignature: false }),
+      fusedBlobRepository.findAllAsync({ withDataAndSignature: false }),
+    ]);
 
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      data: partialBlobs,
-    });
-  });
-
-  router.get("/fused", async (_req: Request, res: Response) => {
-    const partialBlobs = await partialBlobRepository.findAllAsync();
-    const fusedBlobs = fusePartialBlobs(partialBlobs);
-    const unfusedBlobs = unfuseFusedBlob(fusedBlobs);
+    BigInt.prototype.toJSON = function () {
+      return this.toString();
+    };
 
     return res.status(StatusCodes.OK).json({
       success: true,
       data: {
+        partialBlobs,
         fusedBlobs,
-        unfusedBlobs,
       },
-    });
-  });
-
-  router.post("/fused", async (_req: Request, res: Response) => {
-    const txHash = await fuseAndSendBlobs();
-    const partialBlobs = await partialBlobRepository.findAllAsync();
-
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      data: { txHash, partialBlobs },
     });
   });
 
@@ -115,8 +100,8 @@ export const partialBlobRouter: Router = (() => {
     },
   );
 
-  router.get("/fees", async (req: Request, res: Response) => {
-    const feeHistory = await getBlobGasPriceEstimate();
+  router.get("/estimate-blob-price", async (req: Request, res: Response) => {
+    const currentBlobGasPriceEstimate = await getBlobGasPriceEstimate();
 
     // @ts-expect-error BigInt is not serializable
     BigInt.prototype.toJSON = function () {
@@ -125,7 +110,7 @@ export const partialBlobRouter: Router = (() => {
 
     return res.status(StatusCodes.OK).json({
       success: true,
-      data: feeHistory,
+      data: currentBlobGasPriceEstimate,
     });
   });
 
