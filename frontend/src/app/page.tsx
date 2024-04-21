@@ -63,6 +63,8 @@ const Home = () => {
     const { amount } = values;
 
     if (chainId !== chains[0].id) {
+      // TODO fix TS
+      //@ts-expect-error
       await switchChainAsync({ chainId: chains[0].id });
     }
 
