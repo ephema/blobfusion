@@ -1,7 +1,9 @@
+"use client";
 import Header from "@/components/Header";
 
 import UserInfo from "@/components/UserInfo";
 import BlobData from "@/components/BlobData";
+import { useAccount, useConnect } from "wagmi";
 
 const blobs = [
   {
@@ -27,11 +29,20 @@ const blobs = [
 ];
 
 const Home = () => {
+  const { connectors, connect } = useConnect();
+  const { address, isConnected } = useAccount();
+
   return (
     <div className="mt-20 flex h-full flex-col items-center gap-4">
       <Header />
-
-      <UserInfo />
+      <UserInfo
+        isConnected={isConnected}
+        address={address}
+        balance={0}
+        onAddFundsClick={console.log}
+        onNewBlobClick={console.log}
+        onConnectWalletClick={() => connect({ connector: connectors?.[0] })}
+      />
 
       <BlobData blobs={blobs} />
     </div>
