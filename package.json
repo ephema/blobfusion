@@ -1,6 +1,6 @@
 {
   "name": "blobfusion",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Make blobspace more affordable for everyone by combining tiny blobs that don't fill a full EIP-4844 blob into one",
   "repository": "ephema/blobfusion",
   "author": "Marc Nitzsche",
