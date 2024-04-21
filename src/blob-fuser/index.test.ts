@@ -1,4 +1,4 @@
-import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
+import { PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
 
 import { fusePartialBlobs, getDataLengthInHex, unfuseFusedBlob } from "./index";
 

@@ -1,8 +1,8 @@
 import { Hex } from "viem";
 
-import { fusedBlobRepository } from "@/api/fusedBlob/fusedBlobRepository";
-import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
-import { partialBlobRepository } from "@/api/partialBlob/partialBlobRepository";
+import { fusedBlobRepository } from "@/api/blobs/fusedBlob/fusedBlobRepository";
+import { PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
+import { partialBlobRepository } from "@/api/blobs/partialBlob/partialBlobRepository";
 import { prisma } from "@/api/prisma/client";
 import { fusePartialBlobs } from "@/blob-fuser";
 import { sendBlobTransaction } from "@/ethereum/sendBlobTransaction";

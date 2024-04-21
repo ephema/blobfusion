@@ -1,6 +1,6 @@
 import { concat, Hex, isHex, pad, toBytes, toHex } from "viem";
 
-import { type PartialBlob } from "@/api/partialBlob/partialBlobModel";
+import { type PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
 import {
   BLOB_DATA_SIZE_LENGTH_IN_BYTES,
   HEX_MULTIPLIER,

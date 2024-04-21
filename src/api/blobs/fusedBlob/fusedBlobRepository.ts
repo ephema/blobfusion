@@ -1,6 +1,6 @@
 import { type Hex } from "viem";
 
-import { type PartialBlob } from "@/api/partialBlob/partialBlobModel";
+import { type PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
 import { prisma } from "@/api/prisma/client";
 
 export const fusedBlobRepository = {

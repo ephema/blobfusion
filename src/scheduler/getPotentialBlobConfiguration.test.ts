@@ -1,6 +1,6 @@
 import { Hex } from "viem";
 
-import { PartialBlob } from "@/api/partialBlob/partialBlobModel";
+import { PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
 import {
   BLOB_DATA_SIZE_LENGTH_IN_BYTES,
   HEX_MULTIPLIER,
