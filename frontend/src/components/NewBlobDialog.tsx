@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 
 export const newBlobFormSchema = z.object({
-  blobContents: z.string().min(2).max(50),
+  blobContents: z.string().min(2),
   bidInGwei: z.coerce.number().positive().min(1).int(),
 });
 
