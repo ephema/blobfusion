@@ -1,8 +1,8 @@
 import { extractChain } from "viem";
 import { createConfig, http } from "wagmi";
-import { arbitrum, hardhat } from "wagmi/chains";
+import { arbitrumSepolia, hardhat } from "wagmi/chains";
 
-const supportedChains = [hardhat, arbitrum];
+const supportedChains = [hardhat, arbitrumSepolia];
 
 const supportedChainIds = supportedChains.map((chain) => chain.id);
 
@@ -14,7 +14,7 @@ if (!chainId || !supportedChainIds.includes(chainId)) {
 }
 
 const chain = extractChain({
-  chains: [hardhat, arbitrum],
+  chains: [hardhat, arbitrumSepolia],
   id: chainId,
 });
 
