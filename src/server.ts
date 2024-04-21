@@ -10,6 +10,7 @@ import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 
 import { blobRouter } from "./api/blobs/blobRouter";
+import { userRouter } from "./api/user/userRouter";
 
 const app: Express = express();
 
@@ -29,6 +30,7 @@ app.use(requestLogger());
 // Routes
 app.use("/health-check", healthCheckRouter);
 app.use("/blobs", blobRouter);
+app.use("/users", userRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

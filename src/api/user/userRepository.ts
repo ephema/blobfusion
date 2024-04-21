@@ -15,6 +15,10 @@ export const userRepository = {
       },
     });
 
+    if (depositResult.length === 0) {
+      return 0n;
+    }
+
     const userDeposits = depositResult?.[0]?._sum.valueInGwei ?? 0n;
 
     // TODO: There could be a race condition hiding here

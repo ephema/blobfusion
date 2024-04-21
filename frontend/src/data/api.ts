@@ -10,14 +10,12 @@ const api = axios.create({
 });
 
 const userSchema = z.object({
-  publicAddress: z.string(),
-  balance: z.number(),
+  address: z.string(),
+  balanceInGwei: z.number(),
 });
 
-export const getUser = ({ publicAddress }: { publicAddress: Hex }) => {
-  return api
-    .get(`/user/${publicAddress}`)
-    .then((res) => userSchema.parse(res.data));
+export const getUser = ({ address }: { address: Hex }) => {
+  return api.get(`/user/${address}`).then((res) => userSchema.parse(res.data));
 };
 
 const partialBlobSchema = z.object({
