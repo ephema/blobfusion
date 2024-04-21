@@ -7,5 +7,6 @@ export const useLatestBlobs = () => {
     queryKey: ["blobs"],
     queryFn: () => getLatestBlobs(),
     placeholderData: keepPreviousData,
+    refetchInterval: 5000,
   });
 };

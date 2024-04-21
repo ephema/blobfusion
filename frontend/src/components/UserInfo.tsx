@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 interface UserInfoProps {
   address?: string;
   isConnected: boolean;
-  balance: number;
+  balance: string;
   onConnectWalletClick: React.MouseEventHandler<HTMLButtonElement>;
   onAddFundsClick: React.MouseEventHandler<HTMLButtonElement>;
   onNewBlobClick: React.MouseEventHandler<HTMLButtonElement>;
@@ -39,9 +39,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
           </div>
           <div>
             <p className="text-muted-foreground">Balance</p>
-            <h1 className="text-2xl font-bold text-foreground">
-              {balance} ETH
-            </h1>
+            <h1 className="text-2xl font-bold text-foreground">{balance}</h1>
           </div>
         </div>
         <div className="flex w-36 flex-col justify-center gap-2">

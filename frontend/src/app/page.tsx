@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { isAddress, parseEther } from "viem";
+import {
+  formatEther,
+  formatGwei,
+  isAddress,
+  parseEther,
+  parseGwei,
+} from "viem";
 import {
   useAccount,
   useConnect,
@@ -18,6 +24,7 @@ import BlobData from "@/components/BlobData";
 import Header from "@/components/Header";
 import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import UserInfo from "@/components/UserInfo";
+import { useUserBalance } from "@/data/useUserBalance";
 
 const blobs = [
   {
@@ -59,6 +66,14 @@ const Home = () => {
 
   const { sendTransactionAsync } = useSendTransaction();
   const { chains, switchChainAsync } = useSwitchChain();
+
+  const { data: userBalance, error } = useUserBalance({ address });
+
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error]);
 
   const onSubmitAddFunds = async (
     values: z.infer<typeof addFundsFormSchema>,
@@ -108,7 +123,7 @@ const Home = () => {
         <UserInfo
           isConnected={isConnected}
           address={address}
-          balance={0}
+          balance={formatBalance(userBalance ?? 0n)}
           onAddFundsClick={() => setAddFundsDialogOpen(true)}
           onNewBlobClick={() => setNewBlobDialogOpen(true)}
           onConnectWalletClick={() => connect({ connector: connectors?.[0] })}
@@ -130,6 +145,17 @@ const Home = () => {
       />
     </>
   );
+};
+
+const ETH_IN_GWEI = 1000000000n; // also GWEI_IN_WEI
+const formatBalance = (balance: bigint) => {
+  if (balance > ETH_IN_GWEI / 1000n) {
+    return `${formatEther(balance, "gwei")
+      .split(".")
+      .map((str, i) => (i === 1 ? str.slice(0, 4) : str))
+      .join(".")} ETH`;
+  }
+  return `${balance} GWEI`;
 };
 
 export default Home;

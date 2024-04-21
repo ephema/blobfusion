@@ -5,7 +5,7 @@ import helmet from "helmet";
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
 import errorHandler from "@/common/middleware/errorHandler";
-import rateLimiter from "@/common/middleware/rateLimiter";
+// import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 
@@ -20,7 +20,8 @@ app.set("trust proxy", true);
 // Middlewares
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());
-app.use(rateLimiter);
+// TODO: Enable again
+// app.use(rateLimiter);
 
 app.use(express.json());
 

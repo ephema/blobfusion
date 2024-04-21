@@ -15,11 +15,13 @@ const api = axios.create({
 
 const userSchema = z.object({
   address: z.string(),
-  balanceInGwei: z.number(),
+  balanceInGwei: z.coerce.bigint(),
 });
 
 export const getUser = ({ address }: { address: Hex }) => {
-  return api.get(`/user/${address}`).then((res) => userSchema.parse(res.data));
+  return api
+    .get(`/users/${address}`)
+    .then((res) => userSchema.parse(res.data.data));
 };
 
 const partialBlobSchema = z.object({
@@ -44,7 +46,7 @@ const latestBlobSchema = z.object({
 });
 
 export const getLatestBlobs = async () => {
-  return api.get("/blobs").then((res) => latestBlobSchema.parse(res.data));
+  return api.get("/blobs").then((res) => latestBlobSchema.parse(res.data.data));
 };
 
 export const submitBlob = (data: PartialBlobSubmission) => {
