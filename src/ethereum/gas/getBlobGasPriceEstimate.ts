@@ -1,28 +1,21 @@
-import axios from "axios";
 import { createStaleWhileRevalidateCache } from "stale-while-revalidate-cache";
 
 import {
   BLOB_BASE_FEE_UPDATE_FRACTION,
   MIN_BASE_FEE_PER_BLOB_GAS,
 } from "@/common/constants";
-import { BLOBSCAN_BASE_URL } from "@/ethereum/viemClients";
+import { blobSubmitterPublicClient } from "@/ethereum/viemClients";
 
 // There are APIs in the spec to estimate the gas cost of a blob operation:
 // https://github.com/ethereum/execution-apis/pull/486 and https://hackmd.io/@flcl/Bkn4nq17T
-// but they are not yet merged:
-// https://github.com/ethereum/go-ethereum/pull/29140
-// So working around this by using a simple estimate based on the Blobscan API.
-// Blobscan is sometimes really slow, so using a stale-while-revalidate cache
-// to keep impact low
+// but they are not yet merged: https://github.com/ethereum/go-ethereum/pull/29140
+// So working around this by using estimating the next blob base fee based on EIP-4844
+// And using a stale-while-revalidate cache to keep impact of API call low
 
 export const getBlobGasPriceEstimate = async () => {
-  const resultFromSwrCache = await swr("blobscan-result", async () => {
-    const response = await axios.get(
-      `${BLOBSCAN_BASE_URL}/blocks?sort=desc&type=canonical&p=1&ps=1`,
-    );
-
-    const [lastBlock] = response.data.blocks;
-    const { excessBlobGas } = lastBlock;
+  const resultFromSwrCache = await swr("lastblock-result", async () => {
+    const latestBlock = await blobSubmitterPublicClient.getBlock();
+    const { excessBlobGas } = latestBlock;
     const blobBaseFeePerBlobGas = getBaseFeePerBlobGas(BigInt(excessBlobGas));
     const estimate = (blobBaseFeePerBlobGas * 110n) / 100n; // Just to be on the safe side
     return estimate;

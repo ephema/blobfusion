@@ -29,7 +29,6 @@
     "@ladjs/graceful": "^3.2.2",
     "@openzeppelin/contracts": "^5.0.2",
     "@prisma/client": "^5.12.1",
-    "axios": "^1.6.8",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "envalid": "^8.0.0",
