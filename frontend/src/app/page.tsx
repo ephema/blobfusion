@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount, useConnect } from "wagmi";
+import {
+  useAccount,
+  useConnect,
+  useSendTransaction,
+  useSwitchChain,
+} from "wagmi";
+
 import { z } from "zod";
 
 import { toast } from "sonner";
@@ -13,6 +19,7 @@ import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import AddFundsDialog, {
   addFundsFormSchema,
 } from "@/components/AddFundsDialog";
+import { isAddress, parseEther } from "viem";
 
 const blobs = [
   {
@@ -37,26 +44,48 @@ const blobs = [
   },
 ];
 
+const DEPOSIT_CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_ADDRESS;
+
+if (!DEPOSIT_CONTRACT_ADDRESS || !isAddress(DEPOSIT_CONTRACT_ADDRESS)) {
+  throw new Error(
+    "NEXT_PUBLIC_DEPOSIT_CONTRACT_ADDRESS needs to be an address in .env",
+  );
+}
+
 const Home = () => {
   const { connectors, connect } = useConnect();
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   const [newBlobDialogOpen, setNewBlobDialogOpen] = useState(false);
   const [addFundsDialogOpen, setAddFundsDialogOpen] = useState(false);
+
+  const { sendTransactionAsync } = useSendTransaction();
+  const { chains, switchChainAsync } = useSwitchChain();
 
   const onSubmitAddFunds = async (
     values: z.infer<typeof addFundsFormSchema>,
   ) => {
-    const promise = new Promise((resolve) => setTimeout(resolve, 2000));
+    const { amount } = values;
+
+    if (chainId !== chains[0].id) {
+      await switchChainAsync({ chainId: chains[0].id });
+    }
+
+    const promise = sendTransactionAsync({
+      to: DEPOSIT_CONTRACT_ADDRESS,
+      value: parseEther(amount.toString()),
+    });
+
     toast.promise(promise, {
       loading: "Creating new transaction...",
       success: () => {
+        setAddFundsDialogOpen(false);
         return "Transaction sent. Funds will be picked up in just a moment...";
       },
       error: "There was an error adding funds. Please try again.",
     });
 
-    await promise;
-    console.log(values);
+    return promise;
   };
 
   async function onSubmitNewBlob(values: z.infer<typeof newBlobFormSchema>) {

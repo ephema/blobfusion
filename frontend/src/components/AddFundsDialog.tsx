@@ -86,7 +86,7 @@ const AddFundsDialog: React.FC<DialogProps> = ({
                       </div>
                     </div>
                   </FormControl>
-                  <FormDescription>In Gwei</FormDescription>
+                  <FormDescription>In ETH</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
