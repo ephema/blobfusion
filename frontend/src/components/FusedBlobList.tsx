@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+
 import {
   Accordion,
   AccordionContent,
@@ -8,6 +10,7 @@ import {
 import { PartialBlob as PartialBlobType } from "@/lib/types";
 
 import { PartialBlob } from "./PartialBlob";
+import { Badge } from "./ui/badge";
 
 const FusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => (
   <div className="flex-grow md:w-[650px]">
@@ -27,17 +30,19 @@ const FusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => (
             exit={{ opacity: 0, y: -25 }}
             transition={{ duration: 0.6, type: "spring" }}
           >
-            <AccordionItem
-              value={`item-${id}`}
-              className="border-slate-600"
-              key={id}
-            >
+            <AccordionItem value={`item-${id}`} className="border-slate-600">
               <AccordionTrigger className="bg-slate-700/50 px-4 backdrop-blur-md">
                 <div className="max-w-80 overflow-hidden overflow-ellipsis">
                   {txHash ?? "Pending..."}
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="flex justify-center bg-slate-700/20 p-4">
+              <AccordionContent className="flex flex-col items-center justify-center bg-slate-700/20 p-4">
+                <Link
+                  href={`https://sepolia.etherscan.io/tx/${txHash}`}
+                  target="_blank"
+                >
+                  <Badge>Open on Etherscan</Badge>
+                </Link>
                 <div className="flex flex-wrap justify-center gap-2 py-4 pl-4">
                   {partialBlobs.map((blob, index) => (
                     <PartialBlob
