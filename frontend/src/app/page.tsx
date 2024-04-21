@@ -62,10 +62,12 @@ const Home = () => {
   ) => {
     const { amount } = values;
 
-    if (chainId !== chains[0].id) {
+    const depositContractChainId =
+      process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_CHAIN_ID;
+    if (chainId !== depositContractChainId) {
       // TODO fix TS
       //@ts-expect-error chainId is already known
-      await switchChainAsync({ chainId: chains[0].id });
+      await switchChainAsync({ chainId: depositContractChainId });
     }
 
     const promise = sendTransactionAsync({
