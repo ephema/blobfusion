@@ -62,8 +62,10 @@ const Home = () => {
   ) => {
     const { amount } = values;
 
-    const depositContractChainId =
-      process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_CHAIN_ID;
+    const depositContractChainId = Number(
+      process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_CHAIN_ID,
+    );
+
     if (chainId !== depositContractChainId) {
       // TODO fix TS
       //@ts-expect-error chainId is already known
