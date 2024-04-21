@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useAccount, useConnect } from "wagmi";
+
 import Header from "@/components/Header";
 import UserInfo from "@/components/UserInfo";
 import BlobData from "@/components/BlobData";
 import NewBlobDialog from "@/components/NewBlobDialog";
+import AddFundsDialog from "@/components/AddFundsDialog";
 
 const blobs = [
   {
@@ -33,7 +35,8 @@ const blobs = [
 const Home = () => {
   const { connectors, connect } = useConnect();
   const { address, isConnected } = useAccount();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [newBlobDialogOpen, setNewBlobDialogOpen] = useState(false);
+  const [addFundsDialogOpen, setAddFundsDialogOpen] = useState(false);
 
   return (
     <>
@@ -43,15 +46,23 @@ const Home = () => {
           isConnected={isConnected}
           address={address}
           balance={0}
-          onAddFundsClick={console.log}
-          onNewBlobClick={() => setDialogOpen(true)}
+          onAddFundsClick={() => setAddFundsDialogOpen(true)}
+          onNewBlobClick={() => setNewBlobDialogOpen(true)}
           onConnectWalletClick={() => connect({ connector: connectors?.[0] })}
         />
 
         <BlobData blobs={blobs} />
       </div>
 
-      <NewBlobDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+      <NewBlobDialog
+        dialogOpen={newBlobDialogOpen}
+        setDialogOpen={setNewBlobDialogOpen}
+      />
+
+      <AddFundsDialog
+        dialogOpen={addFundsDialogOpen}
+        setDialogOpen={setAddFundsDialogOpen}
+      />
     </>
   );
 };
