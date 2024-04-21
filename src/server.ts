@@ -9,7 +9,7 @@ import rateLimiter from "@/common/middleware/rateLimiter";
 import requestLogger from "@/common/middleware/requestLogger";
 import { env } from "@/common/utils/envConfig";
 
-import { partialBlobRouter } from "./api/blobs/partialBlob/partialBlobRouter";
+import { partialBlobRouter } from "./api/blobs/blobRouter";
 
 const app: Express = express();
 

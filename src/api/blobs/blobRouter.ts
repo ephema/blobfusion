@@ -13,8 +13,8 @@ import { fuseAndSendBlobs } from "@/scheduler/fuseAndSendBlobs";
 import {
   GetPartialBlobSchema,
   PostPartialBlobSchema,
-} from "./partialBlobModel";
-import { partialBlobRepository } from "./partialBlobRepository";
+} from "./partialBlob/partialBlobModel";
+import { partialBlobRepository } from "./partialBlob/partialBlobRepository";
 
 // export const partialBlobRegistry = new OpenAPIRegistry();
 
