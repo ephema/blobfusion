@@ -2,6 +2,7 @@ import { type Hex } from "viem";
 
 import { type PartialBlob } from "@/api/blobs/partialBlob/partialBlobModel";
 import { prisma } from "@/api/prisma/client";
+import { getLengthWithExtraBytes } from "@/blob-fuser";
 
 import { convertPartialBlobInDBToPartialBlob } from "../partialBlob/convertPartialBlobInDBToPartialBlob";
 import { type FusedBlob } from "./fusedBlobModel";
@@ -17,15 +18,19 @@ export const fusedBlobRepository = {
     return fusedBlobsInDB.map((fusedBlob) => ({
       ...fusedBlob,
       partialBlobs: fusedBlob.partialBlobs.map((partialBlob) => {
-        if (!withDataAndSignature) {
-          return {
-            ...partialBlob,
-            data: null,
-            signature: null,
-          };
+        const convertedPartialBlob =
+          convertPartialBlobInDBToPartialBlob(partialBlob);
+
+        if (withDataAndSignature) {
+          return convertedPartialBlob;
         }
 
-        return convertPartialBlobInDBToPartialBlob(partialBlob);
+        return {
+          ...convertedPartialBlob,
+          data: null,
+          signature: null,
+          size: getLengthWithExtraBytes(convertedPartialBlob.data),
+        };
       }),
     }));
   },

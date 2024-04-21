@@ -4,18 +4,19 @@ import { PartialBlob } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 interface BlobDataProps {
-  blobs: PartialBlob[];
+  partialBlobs: PartialBlob[];
+  fusedBlobs: PartialBlob[];
 }
 
-const BlobData: React.FC<BlobDataProps> = ({ blobs }) => {
+const BlobData: React.FC<BlobDataProps> = ({ partialBlobs, fusedBlobs }) => {
   return (
     <div
       className={cn(
         "flex max-w-full flex-col gap-8 lg:mt-8 lg:flex-row lg:gap-16",
       )}
     >
-      <UnfusedBlobList blobs={blobs} />
-      <FusedBlobList blobs={blobs} />
+      <UnfusedBlobList blobs={partialBlobs} />
+      <FusedBlobList blobs={fusedBlobs} />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { Hex } from "viem";
 
 import { prisma } from "@/api/prisma/client";
+import { getLengthWithExtraBytes } from "@/blob-fuser";
 
 import {
   convertHexToBuffer,
@@ -38,10 +39,20 @@ export const partialBlobRepository = {
 
     return convertPartialBlobInDBToPartialBlob(partialBlobInDB);
   },
-  findAllAsync: async ({ withDataAndSignature = true } = {}): Promise<
+  findAllAsync: async (): Promise<
     PartialBlobWithNullableDataAndSignature[]
   > => {
     const partialBlobsInDB = await prisma.partialBlob.findMany();
+    return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
+  },
+
+  findAllUnfusedAsync: async ({ withDataAndSignature = true } = {}): Promise<
+    PartialBlob[]
+  > => {
+    const partialBlobsInDB = await prisma.partialBlob.findMany({
+      where: { fusedBlobId: null },
+    });
+
     const partialBlobs = partialBlobsInDB.map(
       convertPartialBlobInDBToPartialBlob,
     );
@@ -54,14 +65,8 @@ export const partialBlobRepository = {
       ...partialBlob,
       data: null,
       signature: null,
+      size: getLengthWithExtraBytes(partialBlob.data),
     }));
-  },
-
-  findAllUnfusedAsync: async (): Promise<PartialBlob[]> => {
-    const partialBlobsInDB = await prisma.partialBlob.findMany({
-      where: { fusedBlobId: null },
-    });
-    return partialBlobsInDB.map(convertPartialBlobInDBToPartialBlob);
   },
 
   findByIdAsync: async (id: number): Promise<PartialBlob | null> => {

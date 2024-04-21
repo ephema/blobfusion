@@ -11,7 +11,7 @@ const UnfusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => (
           key={index}
           fromAddress={blob.fromAddress}
           size={blob.size}
-          bid={blob.bid}
+          bidInGwei={blob.bidInGwei}
         />
       ))}
     </div>

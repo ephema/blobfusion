@@ -31,7 +31,9 @@ export const blobRouter: Router = (() => {
 
   router.get("/", async (_req: Request, res: Response) => {
     const [partialBlobs, fusedBlobs] = await Promise.all([
-      partialBlobRepository.findAllAsync({ withDataAndSignature: false }),
+      partialBlobRepository.findAllUnfusedAsync({
+        withDataAndSignature: false,
+      }),
       fusedBlobRepository.findAllAsync({ withDataAndSignature: false }),
     ]);
 

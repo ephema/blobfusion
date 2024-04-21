@@ -27,26 +27,28 @@ export const getUser = ({ address }: { address: Hex }) => {
 const partialBlobSchema = z.object({
   id: z.number(),
   size: z.number(),
-  bidInGwei: z.number(),
-  costInGwei: z.number().nullable(),
+  bidInGwei: z.coerce.bigint(),
+  costInGwei: z.coerce.bigint().nullable(),
   fromAddress: z.string(),
   fusedBlobId: z.number().nullable(),
 });
 
 const fusedBlobSchema = z.object({
   id: z.number(),
-  txHash: z.string(),
-  totalCostInGwei: z.number().nullable(),
-  fusedBlobs: z.array(partialBlobSchema),
+  txHash: z.string().nullable(),
+  totalCostInGwei: z.coerce.bigint().nullable(),
+  partialBlobs: z.array(partialBlobSchema),
 });
 
 const latestBlobSchema = z.object({
-  unfusedBlobs: z.array(partialBlobSchema),
+  partialBlobs: z.array(partialBlobSchema),
   fusedBlobs: z.array(fusedBlobSchema),
 });
 
 export const getLatestBlobs = async () => {
-  return api.get("/blobs").then((res) => latestBlobSchema.parse(res.data.data));
+  return api.get("/blobs").then((res) => {
+    return latestBlobSchema.parse(res.data.data);
+  });
 };
 
 export const submitBlob = (data: PartialBlobSubmission) => {

@@ -60,9 +60,20 @@ export const unfuseFusedBlob = (fusedBlob: Hex) => {
   return partialBlobs;
 };
 
-export const getDataLengthInHex = (data: Hex) => {
+export const getLengthWithExtraBytes = (data: Hex) => {
+  return (
+    SIGNATURE_LENGTH_IN_BYTES +
+    BLOB_DATA_SIZE_LENGTH_IN_BYTES +
+    getDataLength(data)
+  );
+};
+
+export const getDataLength = (data: Hex) => {
   const bytes = toBytes(data);
-  const dataLength = bytes.length;
+  return bytes.length;
+};
+export const getDataLengthInHex = (data: Hex) => {
+  const dataLength = getDataLength(data);
   return pad(toHex(dataLength), {
     size: BLOB_DATA_SIZE_LENGTH_IN_BYTES,
   });

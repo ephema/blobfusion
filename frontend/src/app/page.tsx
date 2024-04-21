@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
-  formatEther,
-  formatGwei,
-  isAddress,
-  parseEther,
-  parseGwei,
-} from "viem";
+import { formatEther, isAddress, parseEther } from "viem";
 import {
   useAccount,
   useConnect,
@@ -25,6 +19,7 @@ import Header from "@/components/Header";
 import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import UserInfo from "@/components/UserInfo";
 import { useUserBalance } from "@/data/useUserBalance";
+import { useLatestBlobs } from "@/data/useLatestBlobs";
 
 const blobs = [
   {
@@ -68,12 +63,18 @@ const Home = () => {
   const { chains, switchChainAsync } = useSwitchChain();
 
   const { data: userBalance, error } = useUserBalance({ address });
+  const { data: blobs, error: blobsError } = useLatestBlobs();
+  const { fusedBlobs = [], partialBlobs = [] } = blobs ?? {};
 
   useEffect(() => {
     if (error) {
       console.log(error);
     }
-  }, [error]);
+
+    if (blobsError) {
+      console.log(blobsError);
+    }
+  }, [error, blobsError]);
 
   const onSubmitAddFunds = async (
     values: z.infer<typeof addFundsFormSchema>,
@@ -129,7 +130,7 @@ const Home = () => {
           onConnectWalletClick={() => connect({ connector: connectors?.[0] })}
         />
 
-        <BlobData blobs={blobs} />
+        <BlobData fusedBlobs={fusedBlobs} partialBlobs={partialBlobs} />
       </div>
 
       <NewBlobDialog
