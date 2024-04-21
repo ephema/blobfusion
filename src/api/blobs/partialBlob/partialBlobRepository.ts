@@ -16,7 +16,9 @@ type PartialBlobWithNullableDataAndSignature = Omit<
   signature: Hex | null;
 };
 export const partialBlobRepository = {
-  createAsync: async (input: PartialBlobSubmission): Promise<PartialBlob> => {
+  createAsync: async (
+    input: PartialBlobSubmission,
+  ): Promise<{ id: number }> => {
     const { fromAddress, data, ...partialBlobData } = input;
 
     const partialBlobInDB = await prisma.partialBlob.create({
@@ -31,6 +33,8 @@ export const partialBlobRepository = {
         },
       },
     });
+
+    return { id };
 
     return convertPartialBlobInDBToPartialBlob(partialBlobInDB);
   },

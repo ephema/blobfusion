@@ -1,6 +1,10 @@
 import axios from "axios";
 import { Hex } from "viem";
 import { z } from "zod";
+import {
+  PartialBlobSubmission,
+  PartialBlobSubmissionSchema,
+} from "./partialBlobSubmissionSchema";
 
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const api = axios.create({
@@ -41,4 +45,11 @@ const latestBlobSchema = z.object({
 
 export const getLatestBlobs = async () => {
   return api.get("/blobs").then((res) => latestBlobSchema.parse(res.data));
+};
+
+export const submitBlob = (data: PartialBlobSubmission) => {
+  const partialBlob = PartialBlobSubmissionSchema.parse(data);
+  return api.post("/blobs", {
+    data: partialBlob,
+  });
 };

@@ -5,8 +5,6 @@ import { commonValidations } from "@/common/utils/commonValidation";
 
 extendZodWithOpenApi(z);
 
-// TODO: verify that signature is valid signature of data
-// and that fromAddress is the address that signed the data
 export type PartialBlobSubmission = z.infer<typeof PartialBlobSubmissionSchema>;
 export const PartialBlobSubmissionSchema = z.object({
   bidInGwei: z.coerce.bigint(),
