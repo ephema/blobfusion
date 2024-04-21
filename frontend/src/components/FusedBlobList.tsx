@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
@@ -16,31 +17,42 @@ const FusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => (
       collapsible
       className="max-w-[650px] overflow-hidden rounded-sm"
     >
-      {blobs.map(({ id, txHash, partialBlobs }) => (
-        <AccordionItem
-          value={`item-${id}`}
-          className="border-slate-600"
-          key={id}
-        >
-          <AccordionTrigger className="bg-slate-700/50 px-4 backdrop-blur-md">
-            <div className="max-w-80 overflow-hidden overflow-ellipsis">
-              {txHash ?? "Pending..."}
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="flex justify-center bg-slate-700/20 p-4">
-            <div className="flex flex-wrap justify-center gap-2 py-4 pl-4">
-              {partialBlobs.map((blob, index) => (
-                <PartialBlob
-                  key={index}
-                  fromAddress={blob.fromAddress}
-                  size={blob.size}
-                  bidInGwei={blob.bidInGwei}
-                />
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
+      <AnimatePresence mode="popLayout">
+        {blobs.map(({ id, txHash, partialBlobs }) => (
+          <motion.div
+            key={`fusedblob-${id}`}
+            layout
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -25 }}
+            transition={{ duration: 0.6, type: "spring" }}
+          >
+            <AccordionItem
+              value={`item-${id}`}
+              className="border-slate-600"
+              key={id}
+            >
+              <AccordionTrigger className="bg-slate-700/50 px-4 backdrop-blur-md">
+                <div className="max-w-80 overflow-hidden overflow-ellipsis">
+                  {txHash ?? "Pending..."}
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="flex justify-center bg-slate-700/20 p-4">
+                <div className="flex flex-wrap justify-center gap-2 py-4 pl-4">
+                  {partialBlobs.map((blob, index) => (
+                    <PartialBlob
+                      key={index}
+                      fromAddress={blob.fromAddress}
+                      size={blob.size}
+                      bidInGwei={blob.bidInGwei}
+                    />
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </Accordion>
   </div>
 );
