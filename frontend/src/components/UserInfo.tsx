@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 
 const UserInfo = () => {
   return (
-    <Card className="min-w-[500px] bg-background/40 backdrop-blur-md">
+    <Card className="w-[500px] max-w-full bg-background/40 backdrop-blur-md">
       <CardContent className="mt-4 flex justify-between gap-2">
         <div className="flex flex-col gap-2">
           <div>

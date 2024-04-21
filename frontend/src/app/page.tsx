@@ -1,6 +1,7 @@
-import FusedBlobList from "@/components/FusedBlobList";
-import UnfusedBlobList from "@/components/UnfusedBlobList";
+import Header from "@/components/Header";
+
 import UserInfo from "@/components/UserInfo";
+import BlobData from "@/components/BlobData";
 
 const blobs = [
   {
@@ -25,29 +26,16 @@ const blobs = [
   },
 ];
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="mt-20 flex h-full flex-col items-center gap-4">
-      <div className="mb-4 text-center">
-        <h1 className="mb-2 bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60 bg-clip-text text-4xl font-bold tracking-tight text-transparent">
-          <span className="text-white">🌀</span> BlobFusion
-        </h1>
-        <p className="mb-1 text-muted-foreground">
-          Making blob space{" "}
-          <b className="bg-gradient-to-r from-slate-200/60 via-slate-200 to-slate-200/60 bg-clip-text">
-            affordable
-          </b>{" "}
-          for everyone ✨
-        </p>
-      </div>
+      <Header />
 
       <UserInfo />
 
-      <div className="mt-8 flex min-h-full flex-grow gap-16">
-        <UnfusedBlobList blobs={blobs} />
-        <div className="mt-16 h-full min-h-96 flex-grow border-l border-purple-300/30"></div>
-        <FusedBlobList blobs={blobs} />
-      </div>
+      <BlobData blobs={blobs} />
     </div>
   );
-}
+};
+
+export default Home;
