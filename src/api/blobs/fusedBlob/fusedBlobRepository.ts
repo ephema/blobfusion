@@ -13,6 +13,7 @@ export const fusedBlobRepository = {
   > => {
     const fusedBlobsInDB = await prisma.fusedBlob.findMany({
       include: { partialBlobs: true },
+      orderBy: { createdAt: "desc" },
     });
 
     return fusedBlobsInDB.map((fusedBlob) => ({

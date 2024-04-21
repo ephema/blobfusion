@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { formatEther, isAddress, parseEther } from "viem";
+import { formatEther, isAddress, parseEther, stringToHex } from "viem";
 import {
   useAccount,
   useConnect,
   useSendTransaction,
+  useSignMessage,
   useSwitchChain,
 } from "wagmi";
 import { z } from "zod";
@@ -20,6 +21,7 @@ import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import UserInfo from "@/components/UserInfo";
 import { useUserBalance } from "@/data/useUserBalance";
 import { useLatestBlobs } from "@/data/useLatestBlobs";
+import { useSubmitBlob } from "@/data/useSubmitBlob";
 
 const blobs = [
   {
@@ -56,15 +58,17 @@ if (!DEPOSIT_CONTRACT_ADDRESS || !isAddress(DEPOSIT_CONTRACT_ADDRESS)) {
 const Home = () => {
   const { connectors, connect } = useConnect();
   const { address, isConnected, chainId } = useAccount();
-  const [newBlobDialogOpen, setNewBlobDialogOpen] = useState(false);
-  const [addFundsDialogOpen, setAddFundsDialogOpen] = useState(false);
-
   const { sendTransactionAsync } = useSendTransaction();
   const { chains, switchChainAsync } = useSwitchChain();
+  const { signMessageAsync } = useSignMessage();
+
+  const [newBlobDialogOpen, setNewBlobDialogOpen] = useState(false);
+  const [addFundsDialogOpen, setAddFundsDialogOpen] = useState(false);
 
   const { data: userBalance, error } = useUserBalance({ address });
   const { data: blobs, error: blobsError } = useLatestBlobs();
   const { fusedBlobs = [], partialBlobs = [] } = blobs ?? {};
+  const { mutateAsync: submitBlob } = useSubmitBlob();
 
   useEffect(() => {
     if (error) {
@@ -103,18 +107,40 @@ const Home = () => {
   };
 
   async function onSubmitNewBlob(values: z.infer<typeof newBlobFormSchema>) {
-    const promise = new Promise((resolve) => setTimeout(resolve, 2000));
+    const { blobContents, bidInGwei } = values;
+
+    const textInHex = stringToHex(blobContents);
+    const signatureToast = toast.loading("Signing message...");
+    const signature = await signMessageAsync({
+      message: { raw: textInHex },
+    });
+
+    toast.dismiss(signatureToast);
+
+    if (!address) {
+      // TODO: Handle properly
+      return;
+    }
+
+    const promise = submitBlob({
+      id: 0,
+      data: textInHex,
+      fromAddress: address,
+      bidInGwei: bidInGwei,
+      signature,
+    });
+
     toast.promise(promise, {
       loading: "Sending Blob...",
       success: () => {
+        setNewBlobDialogOpen(false);
         return "Blob successfully sent";
       },
       error:
         "There was an error sending your blob. Please check the console for details.",
     });
 
-    await promise;
-    console.log(values);
+    return promise;
   }
 
   return (

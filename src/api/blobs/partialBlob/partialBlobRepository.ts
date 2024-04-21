@@ -35,7 +35,7 @@ export const partialBlobRepository = {
       },
     });
 
-    return { id };
+    return { id: partialBlobInDB.id };
 
     return convertPartialBlobInDBToPartialBlob(partialBlobInDB);
   },
@@ -51,6 +51,7 @@ export const partialBlobRepository = {
   > => {
     const partialBlobsInDB = await prisma.partialBlob.findMany({
       where: { fusedBlobId: null },
+      orderBy: { createdAt: "desc" },
     });
 
     const partialBlobs = partialBlobsInDB.map(

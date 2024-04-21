@@ -53,7 +53,11 @@ export const getLatestBlobs = async () => {
 
 export const submitBlob = (data: PartialBlobSubmission) => {
   const partialBlob = PartialBlobSubmissionSchema.parse(data);
-  return api.post("/blobs", {
-    data: partialBlob,
-  });
+
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
+  console.log(partialBlob);
+
+  return api.post("/blobs", partialBlob);
 };
