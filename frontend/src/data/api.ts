@@ -58,7 +58,6 @@ export const submitBlob = (data: PartialBlobSubmission) => {
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
-  console.log(partialBlob);
 
   return api.post("/blobs", partialBlob);
 };

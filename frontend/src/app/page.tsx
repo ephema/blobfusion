@@ -64,7 +64,7 @@ const Home = () => {
 
     if (chainId !== chains[0].id) {
       // TODO fix TS
-      //@ts-expect-error
+      //@ts-expect-error chainId is already known
       await switchChainAsync({ chainId: chains[0].id });
     }
 
@@ -102,10 +102,9 @@ const Home = () => {
     }
 
     const promise = submitBlob({
-      id: 0,
       data: textInHex,
       fromAddress: address,
-      bidInGwei: bidInGwei,
+      bidInGwei: BigInt(bidInGwei),
       signature,
     });
 

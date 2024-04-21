@@ -22,7 +22,7 @@ export const wagmiConfig = createConfig({
   chains: [chain],
   transports: {
     [hardhat.id]: http(),
-    [arbitrum.id]: http(),
+    [arbitrumSepolia.id]: http(),
   },
   ssr: true,
 });
