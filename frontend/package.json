@@ -37,6 +37,7 @@
     "zod": "^3.22.5"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^2.0.6",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.67",
     "@types/react-dom": "^18.2.22",
