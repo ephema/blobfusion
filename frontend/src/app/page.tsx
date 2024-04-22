@@ -62,6 +62,11 @@ const Home = () => {
   ) => {
     const { amount } = values;
 
+    if (!address) {
+      toast.error("No account connected");
+      return;
+    }
+
     const depositContractChainId = Number(
       process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_CHAIN_ID,
     );
@@ -92,18 +97,23 @@ const Home = () => {
   async function onSubmitNewBlob(values: z.infer<typeof newBlobFormSchema>) {
     const { blobContents, bidInGwei } = values;
 
+    if (!address) {
+      toast.error("No account connected");
+      return;
+    }
+
     const textInHex = stringToHex(blobContents);
-    const signatureToast = toast.loading("Signing message...");
-    const signature = await signMessageAsync({
+    const signaturePromise = signMessageAsync({
       message: { raw: textInHex },
     });
 
-    toast.dismiss(signatureToast);
+    toast.promise(signaturePromise, {
+      loading: "Signing message...",
+      success: () => "Message was signed",
+      error: "There was an error signing your message",
+    });
 
-    if (!address) {
-      // TODO: Handle properly
-      return;
-    }
+    const signature = await signaturePromise;
 
     const promise = submitBlob({
       data: textInHex,
