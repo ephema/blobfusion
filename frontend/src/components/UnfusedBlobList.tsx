@@ -11,6 +11,7 @@ const UnfusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => (
       <AnimatePresence mode="popLayout">
         {blobs.map((blob) => (
           <motion.div
+            layoutId={`blob-${blob.id}`}
             key={`blob-${blob.id}`}
             layout
             initial={{ opacity: 0, y: 25 }}
