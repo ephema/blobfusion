@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import Link from "next/link";
 
 import {
@@ -56,23 +56,25 @@ const FusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => {
                     <Badge>Open on Etherscan</Badge>
                   </Link>
                   <div className="flex flex-wrap justify-center gap-2 py-4 pl-4">
-                    {partialBlobs.map((blob, index) => (
-                      <motion.div
-                        key={`blob-${blob.id}`}
-                        layoutId={`blob-${blob.id}`}
-                        layout
-                        initial={{ opacity: 0, y: 25 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -25 }}
-                        transition={{ duration: 0.6, type: "spring" }}
-                      >
-                        <PartialBlob
-                          fromAddress={blob.fromAddress}
-                          size={blob.size}
-                          bidInGwei={blob.bidInGwei}
-                        />
-                      </motion.div>
-                    ))}
+                    <LayoutGroup>
+                      {partialBlobs.map((blob, index) => (
+                        <motion.div
+                          key={`blob-${blob.id}`}
+                          layoutId={`blob-${blob.id}`}
+                          layout
+                          initial={{ opacity: 0, y: 25 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -25 }}
+                          transition={{ duration: 0.6, type: "spring" }}
+                        >
+                          <PartialBlob
+                            fromAddress={blob.fromAddress}
+                            size={blob.size}
+                            bidInGwei={blob.bidInGwei}
+                          />
+                        </motion.div>
+                      ))}
+                    </LayoutGroup>
                   </div>
                 </AccordionContent>
               </AccordionItem>
