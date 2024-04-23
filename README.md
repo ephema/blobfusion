@@ -19,6 +19,7 @@ BlobFusion enables you to share blobs with other people by packing smaller blobs
 1. User sends a blob with a signature (proving this piece of data is from them) and a bid (max. amount the user is willing to pay for blob to get included) to the server
 1. The server saves the blob to the DB
 1. Periodically, the server tries to build a blob that satisfies all conditions (like shared cost of blob < sum of all bids, etc)
+1. Blob tx gets sent to Mainnet/Sepolia
 
 ## 🛠️ Getting Started
 
