@@ -12,13 +12,13 @@ The current state of Ethereum is like that outrageous law. You have to use the f
 
 BlobFusion enables you to share blobs with other people by packing smaller blobs into one normal blob. This is to maximize blobspace efficiency (=good for the network) and cost (=good for the user).
 
-### How it works
+### How to use
 
-User sends some ETH to the Arbitrum Smart Contract
-The server indexes the transaction and allows users to submit blobs
-User sends a blob with a signature to the server and how much they are willing to pay
-The server saves the blob to the DB
-Periodically, the server tries to build a blob that satisfies all conditions (like shared cost of blob < sum of all bids, etc)
+1. User sends some ETH to the Arbitrum Smart Contract
+1. The server indexes the transaction and adds funds to balance
+1. User sends a blob with a signature (proving this piece of data is from them) and a bid (max. amount the user is willing to pay for blob to get included) to the server
+1. The server saves the blob to the DB
+1. Periodically, the server tries to build a blob that satisfies all conditions (like shared cost of blob < sum of all bids, etc)
 
 ## 🛠️ Getting Started
 
