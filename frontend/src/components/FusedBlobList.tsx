@@ -50,10 +50,10 @@ const FusedBlobList: React.FC<{ blobs: PartialBlobType[] }> = ({ blobs }) => {
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col items-center justify-center bg-slate-700/20 p-4">
                   <Link
-                    href={`https://sepolia.etherscan.io/tx/${txHash}`}
+                    href={`https://sepolia.blobscan.com/tx/${txHash}`}
                     target="_blank"
                   >
-                    <Badge>Open on Etherscan</Badge>
+                    <Badge>View on Blobscan</Badge>
                   </Link>
                   <div className="flex flex-wrap justify-center gap-2 py-4 pl-4">
                     <LayoutGroup>
