@@ -25,6 +25,8 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "./ui/textarea";
+import { getRandomBlobText } from "@/lib/getRandomBlobText";
+import { RandomBlobButton } from "./RandomBlobButton";
 
 export const newBlobFormSchema = z.object({
   blobContents: z.string().min(2),
@@ -52,7 +54,7 @@ const NewBlobDialog: React.FC<DialogProps> = ({
     defaultValues,
   });
 
-  const { formState, handleSubmit } = form;
+  const { formState, handleSubmit, setValue } = form;
   const { isSubmitting } = formState;
 
   return (
@@ -84,6 +86,12 @@ const NewBlobDialog: React.FC<DialogProps> = ({
                           disabled={isSubmitting}
                           className="min-h-40 bg-background/40 backdrop-blur-md"
                           {...field}
+                        />
+                        <RandomBlobButton
+                          disabled={isSubmitting}
+                          onClick={() => {
+                            setValue(field.name, getRandomBlobText());
+                          }}
                         />
                       </div>
                     </div>
