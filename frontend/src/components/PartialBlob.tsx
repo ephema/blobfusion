@@ -34,9 +34,9 @@ export const PartialBlob: React.FC<PartialBlobType> = ({
     {
       name: "lime",
       border: "border-lime-900",
-      bg: "bg-lime-950/40",
+      bg: "bg-lime-950/60",
       text: "text-lime-100",
-      hoverBg: "hover:bg-lime-900/20",
+      hoverBg: "hover:bg-lime-900/40",
     },
     {
       name: "teal",
