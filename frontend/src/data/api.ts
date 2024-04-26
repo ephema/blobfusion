@@ -51,6 +51,13 @@ export const getLatestBlobs = async () => {
   });
 };
 
+const estimateBlobCostSchema = z.coerce.bigint();
+export const getEstimatedBlobCost = async () => {
+  return api.get("/blobs/estimate-blob-price").then((res) => {
+    return estimateBlobCostSchema.parse(res.data.data);
+  });
+};
+
 export const submitBlob = (data: PartialBlobSubmission) => {
   const partialBlob = PartialBlobSubmissionSchema.parse(data);
 

@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "./ui/textarea";
 import { getRandomBlobText } from "@/lib/getRandomBlobText";
 import { RandomBlobButton } from "./RandomBlobButton";
+import { useEstimatedBlobCost } from "@/data/useEstimatedBlobCost";
 
 export const newBlobFormSchema = z.object({
   blobContents: z.string().min(2),
@@ -44,11 +45,13 @@ type DialogProps = {
   onSubmit: (values: z.infer<typeof newBlobFormSchema>) => void;
 };
 
+const ETH_IN_GWEI = 1000000000n; // TODO: move to central place
 const NewBlobDialog: React.FC<DialogProps> = ({
   dialogOpen,
   setDialogOpen,
   onSubmit,
 }) => {
+  const { data: estimatedBlobCost } = useEstimatedBlobCost();
   const form = useForm<z.infer<typeof newBlobFormSchema>>({
     resolver: zodResolver(newBlobFormSchema),
     defaultValues,
@@ -117,7 +120,18 @@ const NewBlobDialog: React.FC<DialogProps> = ({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>Your bid in Gwei</FormDescription>
+                  <FormDescription>
+                    Your bid in Gwei{" "}
+                    {estimatedBlobCost ? (
+                      <>
+                        (Full blob currently costs{" "}
+                        {String(
+                          (estimatedBlobCost * BigInt(2 ** 17)) / ETH_IN_GWEI,
+                        )}{" "}
+                        gwei)
+                      </>
+                    ) : null}
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
