@@ -50,7 +50,9 @@ const UserInfo: React.FC<UserInfoProps> = ({
           >
             Add Funds
           </Button>
-          <Button onClick={onNewBlobClick}>New Blob</Button>
+          <Button onClick={onNewBlobClick} disabled={balance === "0 GWEI"}>
+            New Blob
+          </Button>
         </div>
       </CardContent>
 
