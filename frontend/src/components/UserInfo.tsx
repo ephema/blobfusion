@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 import { Button } from "./ui/button";
+import { Coins, Plus } from "lucide-react";
 
 interface UserInfoProps {
   address?: string;
@@ -48,9 +49,11 @@ const UserInfo: React.FC<UserInfoProps> = ({
             className="bg-background/40"
             onClick={onAddFundsClick}
           >
+            <Coins className="mr-2 h-4 w-4" />
             Add Funds
           </Button>
           <Button onClick={onNewBlobClick} disabled={balance === "0 GWEI"}>
+            <Plus className="mr-2 h-4 w-4" />
             New Blob
           </Button>
         </div>
