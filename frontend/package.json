@@ -17,6 +17,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tooltip": "^1.0.7",
     "@tanstack/react-query": "^5.29.2",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
@@ -37,6 +38,7 @@
     "zod": "^3.22.5"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^2.0.6",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.67",
     "@types/react-dom": "^18.2.22",

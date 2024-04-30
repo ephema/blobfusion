@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Hex } from "viem";
 import { z } from "zod";
+
 import {
   PartialBlobSubmission,
   PartialBlobSubmissionSchema,
@@ -9,7 +10,6 @@ import {
 const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 1000,
   responseType: "json",
 });
 
@@ -51,13 +51,19 @@ export const getLatestBlobs = async () => {
   });
 };
 
+const estimateBlobCostSchema = z.coerce.bigint();
+export const getEstimatedBlobCost = async () => {
+  return api.get("/blobs/estimate-blob-price").then((res) => {
+    return estimateBlobCostSchema.parse(res.data.data);
+  });
+};
+
 export const submitBlob = (data: PartialBlobSubmission) => {
   const partialBlob = PartialBlobSubmissionSchema.parse(data);
 
   BigInt.prototype.toJSON = function () {
     return this.toString();
   };
-  console.log(partialBlob);
 
   return api.post("/blobs", partialBlob);
 };

@@ -38,7 +38,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="dark">
               <section className="dark relative overflow-hidden">
                 <BackgroundGradients />
-                <div className="mx-auto min-h-screen p-8 md:max-w-3xl">
+                <div className="mx-auto min-h-screen p-8 md:max-w-[54rem]">
                   {children}
                 </div>
               </section>

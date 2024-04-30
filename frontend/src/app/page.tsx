@@ -19,32 +19,9 @@ import BlobData from "@/components/BlobData";
 import Header from "@/components/Header";
 import NewBlobDialog, { newBlobFormSchema } from "@/components/NewBlobDialog";
 import UserInfo from "@/components/UserInfo";
-import { useUserBalance } from "@/data/useUserBalance";
 import { useLatestBlobs } from "@/data/useLatestBlobs";
 import { useSubmitBlob } from "@/data/useSubmitBlob";
-
-const blobs = [
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-  {
-    size: 1245,
-    bid: 1238,
-    fromAddress: "0x222d39Ec6bb596229938210a0D57E5C17f479495",
-  },
-];
+import { useUserBalance } from "@/data/useUserBalance";
 
 const DEPOSIT_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_ADDRESS;
@@ -85,8 +62,19 @@ const Home = () => {
   ) => {
     const { amount } = values;
 
-    if (chainId !== chains[0].id) {
-      await switchChainAsync({ chainId: chains[0].id });
+    if (!address) {
+      toast.error("No account connected");
+      return;
+    }
+
+    const depositContractChainId = Number(
+      process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_CHAIN_ID,
+    );
+
+    if (chainId !== depositContractChainId) {
+      // TODO fix TS
+      //@ts-expect-error chainId is already known
+      await switchChainAsync({ chainId: depositContractChainId });
     }
 
     const promise = sendTransactionAsync({
@@ -109,24 +97,28 @@ const Home = () => {
   async function onSubmitNewBlob(values: z.infer<typeof newBlobFormSchema>) {
     const { blobContents, bidInGwei } = values;
 
-    const textInHex = stringToHex(blobContents);
-    const signatureToast = toast.loading("Signing message...");
-    const signature = await signMessageAsync({
-      message: { raw: textInHex },
-    });
-
-    toast.dismiss(signatureToast);
-
     if (!address) {
-      // TODO: Handle properly
+      toast.error("No account connected");
       return;
     }
 
+    const textInHex = stringToHex(blobContents);
+    const signaturePromise = signMessageAsync({
+      message: { raw: textInHex },
+    });
+
+    toast.promise(signaturePromise, {
+      loading: "Signing message...",
+      success: () => "Message was signed",
+      error: "There was an error signing your message",
+    });
+
+    const signature = await signaturePromise;
+
     const promise = submitBlob({
-      id: 0,
       data: textInHex,
       fromAddress: address,
-      bidInGwei: bidInGwei,
+      bidInGwei: BigInt(bidInGwei),
       signature,
     });
 
