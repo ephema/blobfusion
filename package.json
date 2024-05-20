@@ -42,7 +42,7 @@
     "stale-while-revalidate-cache": "^3.4.0",
     "swagger-ui-express": "^5.0.0",
     "toad-scheduler": "^3.0.1",
-    "viem": "^2.9.29",
+    "viem": "^2.11.0",
     "zod": "^3.23.5"
   },
   "devDependencies": {
