@@ -1,6 +1,6 @@
 # 🌀 BlobFusion
 
-Check out the live demo using Sepolia at https://blobfusion.netlify.app
+Check out the live demo using Sepolia at https://blobfusion.ephema.io
 
 ## 🌟 Introduction
 
