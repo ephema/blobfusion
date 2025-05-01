@@ -22,6 +22,7 @@ import UserInfo from "@/components/UserInfo";
 import { useLatestBlobs } from "@/data/useLatestBlobs";
 import { useSubmitBlob } from "@/data/useSubmitBlob";
 import { useUserBalance } from "@/data/useUserBalance";
+import { Button } from "@/components/ui/button";
 
 const DEPOSIT_CONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_DEPOSIT_CONTRACT_ADDRESS;
@@ -33,10 +34,33 @@ if (!DEPOSIT_CONTRACT_ADDRESS || !isAddress(DEPOSIT_CONTRACT_ADDRESS)) {
 }
 
 const Home = () => {
+  return (
+    <div className="align-center flex h-full w-full flex-col items-center justify-center gap-2 rounded-sm bg-background/40 p-8 py-16 backdrop-blur-md">
+      <h1 className="text-2xl font-bold tracking-tight">
+        We've turned off the BlobFusion demo
+      </h1>
+      <p className="mb-5 text-lg text-white">
+        But you can still{" "}
+        <a
+          href="https://github.com/ephema/blobfusion"
+          className="text-blue-500"
+        >
+          check out the code
+        </a>{" "}
+        and try it out yourself
+      </p>
+      <Button asChild>
+        <a href="https://github.com/ephema/blobfusion">Open GitHub</a>
+      </Button>
+    </div>
+  );
+};
+
+const HomeOld = () => {
   const { connectors, connect } = useConnect();
   const { address, isConnected, chainId } = useAccount();
   const { sendTransactionAsync } = useSendTransaction();
-  const { chains, switchChainAsync } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
   const { signMessageAsync } = useSignMessage();
 
   const [newBlobDialogOpen, setNewBlobDialogOpen] = useState(false);
